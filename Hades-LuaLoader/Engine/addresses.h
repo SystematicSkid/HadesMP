@@ -26,5 +26,18 @@ namespace engine
 
 			DWORD64 CONST directories = Memory::GetInstanceAddress("48 8D 05 ? ? ? ? 49 8B 04 02");
 		}
+
+		namespace app
+		{
+			namespace functions
+			{
+				DWORD64 CONST update = Memory::GetCallAddress("E8 ? ? ? ? 80 7B 52 00");
+			}
+		}
+
+		namespace renderer
+		{
+			DWORD64 CONST instance = Memory::GetInstanceAddress("48 8B 0D ? ? ? ? 48 85 C9 75 07");
+		}
 	}
 }

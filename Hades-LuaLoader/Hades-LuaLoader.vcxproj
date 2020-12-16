@@ -131,6 +131,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,13 +145,17 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Hooks\directx.h" />
+    <ClInclude Include="Core\Hooks\hooks.h" />
     <ClInclude Include="Engine\addresses.h" />
     <ClInclude Include="Engine\Classes\filestream.h" />
     <ClInclude Include="Engine\Classes\platformfile.h" />
+    <ClInclude Include="Engine\Classes\renderer.h" />
     <ClInclude Include="Engine\Classes\scriptmanager.h" />
     <ClInclude Include="Engine\engine.h" />
     <ClInclude Include="Engine\Enums\filesystem.h" />
     <ClInclude Include="Utilities\memory.h" />
+    <ClInclude Include="Utilities\proxy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

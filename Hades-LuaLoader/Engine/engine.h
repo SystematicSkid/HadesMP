@@ -17,6 +17,9 @@
 #include <metahost.h>
 #include <psapi.h>
 
+/* DirectX */
+#include <d3d11.h>
+
 /* Utilities */
 #include "../Utilities/memory.h"
 
@@ -27,6 +30,7 @@
 #include "./Enums/filesystem.h"
 
 /* Classes */
+#include "./Classes/renderer.h"
 #include "./Classes/scriptmanager.h"
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"

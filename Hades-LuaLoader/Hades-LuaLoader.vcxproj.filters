@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Engine\Enums">
       <UniqueIdentifier>{66288e1b-3f96-491e-bc4e-4910a4846317}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{8cbf5ba5-ce37-484b-86a1-3d5df160330f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Hooks">
+      <UniqueIdentifier>{7ef7a354-f887-499a-8cf7-aa28cc87cbf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -52,6 +58,18 @@
     </ClInclude>
     <ClInclude Include="Engine\Classes\filestream.h">
       <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\proxy.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Hooks\directx.h">
+      <Filter>Header Files\Core\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\renderer.h">
+      <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Hooks\hooks.h">
+      <Filter>Header Files\Core\Hooks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
