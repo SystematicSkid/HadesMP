@@ -14,5 +14,10 @@ namespace engine::hades
 		{
 			return static_cast<PlayerManager * (__fastcall*)()>((PVOID)engine::addresses::playermanager::functions::instance)();
 		}
+
+		hades::Player* AddPlayer(int index)
+		{
+			return static_cast<hades::Player * (__fastcall*)(PlayerManager*, int)>((PVOID)engine::addresses::playermanager::functions::add_player)(this, index);
+		}
 	};
 }

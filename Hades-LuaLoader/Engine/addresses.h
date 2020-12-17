@@ -62,6 +62,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST instance = Memory::GetCallAddress("E8 ? ? ? ? 0F B6 4D 04");
+				DWORD64 CONST add_player = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F8 0F B6 1D");
 			}
 		}
 	}
