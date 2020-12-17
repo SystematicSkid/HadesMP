@@ -34,3 +34,6 @@
 #include "./Classes/scriptmanager.h"
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"
+
+/* Game Classes */
+#include "./Classes/Hades/camera.h"

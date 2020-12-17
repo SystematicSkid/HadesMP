@@ -39,5 +39,22 @@ namespace engine
 		{
 			DWORD64 CONST instance = Memory::GetInstanceAddress("48 8B 0D ? ? ? ? 48 85 C9 75 07");
 		}
+
+		namespace debug_overlay
+		{
+			namespace functions
+			{
+				DWORD64 CONST addtext = Memory::GetCallAddress("E8 ? ? ? ? 8B 45 77");
+			}
+		}
+
+		namespace camera
+		{
+			namespace functions
+			{
+				DWORD64 CONST instance = Memory::GetCallAddress("E8 ? ? ? ? 80 78 03 00");
+				DWORD64 CONST shake = Memory::GetCallAddress("E8 ? ? ? ? C7 45 ? ? ? ? ? 48 8D 55 D7");
+			}
+		}
 	}
 }
