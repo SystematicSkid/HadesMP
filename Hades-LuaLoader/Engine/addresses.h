@@ -73,5 +73,13 @@ namespace engine
 				DWORD64 CONST create_player_unit = Memory::SigScan("48 8B C4 53 57 48 83 EC 58");
 			}
 		}
+
+		namespace unit
+		{
+			namespace functions
+			{
+				DWORD64 CONST move_input = Memory::GetCallAddress("E8 ? ? ? ? 4C 8B 47 18");
+			}
+		}
 	}
 }

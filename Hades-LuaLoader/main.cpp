@@ -9,6 +9,9 @@ HMODULE dll;
 Proxy proxy;
 bool init_lua = true;
 
+bool has_loaded_new_player = false;
+engine::hades::Thing* unit = nullptr;
+
 void init()
 {
 	/*
@@ -31,12 +34,44 @@ void init()
 	::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);
 	::freopen_s(&pNewStderr, "CONOUT$", "w", stderr);
 
-	if (!proxy.Init())
-		MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
+	//if (!proxy.Init())
+	//	MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
 
-	core::hooks::on_update = [=]()
+	core::hooks::on_update = [=](float dt)
 	{
-		if(init_lua)
+		auto player_manager = engine::hades::PlayerManager::Instance();
+
+		if (!has_loaded_new_player && global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit)
+		{
+			printf("\n\nCreating new unit!\n");
+			printf("Location: %f %f\n", global::spawn_location.x, global::spawn_location.y);
+			printf("Data: 0x%p\n", global::new_unit_data);
+			printf("Thing: 0x%p\n", global::new_map_thing);
+			unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
+			printf("unit: 0x%p\n", unit);
+			if (unit)
+			{
+				//auto player_manager = engine::hades::PlayerManager::Instance();
+				//player_manager->players[0]->active_unit = unit;
+				// Assign current unit to player
+				//auto new_player = engine::hades::PlayerManager::Instance()->AddPlayer(1);
+				//new_player->active_unit = player;
+			}
+
+			has_loaded_new_player = true;
+		}
+
+		if (unit)
+		{
+			if(player_manager)
+			{
+				auto player_unit = player_manager->players[0]->active_unit;
+				if(player_unit)
+					unit->MoveInput(&player_unit->location, 1.0, false, dt);
+			}
+		}
+
+		/*if(init_lua)
 		{
 			char* dir = engine::PlatformFile::GetResourceDirectory(engine::ResourceDirectory::RD_MIDDLEWARE_2);
 			std::string script_dir(dir);
@@ -55,8 +90,10 @@ void init()
 					MessageBoxA(NULL, "Failed to load lua file", "Error", NULL);
 			}
 			init_lua = false;
-		}
+		}*/
 	};
+
+	printf("PlayerManager: 0x%p\n", engine::hades::PlayerManager::Instance());
 
 	core::hooks::initialize();
 

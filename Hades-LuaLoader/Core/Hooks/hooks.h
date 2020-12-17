@@ -9,14 +9,14 @@
 
 namespace core::hooks
 {
-	std::function<void()> on_update = nullptr;
+	std::function<void(float)> on_update = nullptr;
 
 	PVOID original_update = nullptr;
 
 	void __fastcall hook_update(DWORD64* app, float elapsed_seconds)
 	{
 		if (on_update)
-			on_update();
+			on_update(elapsed_seconds);
 		return static_cast<void(__fastcall*)(DWORD64*, float)>(original_update)(app, elapsed_seconds);
 	}
 

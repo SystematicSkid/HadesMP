@@ -142,6 +142,13 @@ namespace engine::hades
 		D3DXVECTOR3 direction;
 		ThingData* thing_data;
 		BodyComponent* body;
+
+	public:
+		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)
+		{
+			return static_cast<void(__fastcall*)(Thing*, D3DXVECTOR2*, float, bool, float)>((PVOID)engine::addresses::unit::functions::move_input)
+				(this, location, speed_fraction, strafe, elapsed_seconds);
+		}
 	};
 
 	struct MapThing
