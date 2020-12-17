@@ -119,5 +119,14 @@
     <ClInclude Include="Engine\Classes\Hades\Unit\thing.h">
       <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\gamedata.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\unitdata.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\unitmanager.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

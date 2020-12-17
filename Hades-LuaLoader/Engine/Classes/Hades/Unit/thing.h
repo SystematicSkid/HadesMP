@@ -2,7 +2,7 @@
 
 namespace engine::hades
 {
-	struct ThingData
+	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;
 		engine::misc::HashGuid graphic;
@@ -113,6 +113,11 @@ namespace engine::hades
 		bool mTriggerOnSpawn;
 		bool mEditorOutlineDrawBounds;
 		float mAmbient;
+		std::vector<D3DXVECTOR2> mPoints;
+		std::vector<D3DXVECTOR2> mOccluderPoints;
+		DWORD64* mInteract;
+		DWORD64* mMetering;
+		std::vector<DWORD64> mUsing;
 	};
 
 	class Thing : public RenderComponent
@@ -137,5 +142,53 @@ namespace engine::hades
 		D3DXVECTOR3 direction;
 		ThingData* thing_data;
 		BodyComponent* body;
+	};
+
+	struct MapThing
+	{
+		BYTE mDataType[1];
+		engine::misc::HashGuid mName;
+		D3DXVECTOR2 mLocation;
+		int mId;
+		std::vector<DWORD> mGroupNames;
+		bool mFrozen;
+		bool mSelectable;
+		bool mVisible;
+		bool mActive;
+		bool mActivateAtRange;
+		float mActivationRange;
+		engine::misc::HashGuid mHelpTextId;
+		engine::misc::Color mColor;
+		float mAngle;
+		float mScale;
+		float mOffsetZ;
+		float mTallness;
+		float mSkewAngle;
+		float mSkewScale;
+		bool mFlipHorizontal;
+		bool mFlipVertical;
+		int mAttachToID;
+		std::vector<int> mAttachedIDs;
+		bool mInvert;
+		bool mClutter;
+		BYTE mCreatesShadows[1];
+		BYTE mStopsLight[1];
+		float mAmbient;
+		std::string mComments;
+		std::vector<D3DXVECTOR2> mPoints;
+		bool mCollision;
+		bool mCausesOcclusion;
+		bool mIgnoreGridManager;
+		bool mAllowMovementReaction;
+		BYTE mDrawVfxOnTop[1];
+		BYTE mUseBoundsForSortArea[1];
+		float mParallaxAmount;
+		float mPrevParallaxAmount;
+		bool mParallaxDirty;
+		int mSortIndex;
+		std::vector<DWORD64*> m_gridSquares;
+		float mHue;
+		float mSaturation;
+		float mValue;
 	};
 }
