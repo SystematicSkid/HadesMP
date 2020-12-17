@@ -19,6 +19,8 @@
 
 /* DirectX */
 #include <d3d11.h>
+#include <d3d9.h>
+#include <d3dx9math.h>
 
 /* Utilities */
 #include "../Utilities/memory.h"
@@ -37,3 +39,4 @@
 
 /* Game Classes */
 #include "./Classes/Hades/camera.h"
+#include "./Classes/Hades/playermanager.h"

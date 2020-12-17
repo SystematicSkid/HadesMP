@@ -31,12 +31,12 @@ namespace engine::hades
 		/*
 			TODO: Implement vector float classes
 		*/
-		//Vector2 tether_offset;
-		//Vector2 last_virtual_cursor_location;
-		//Vector2 prev_location;
-		//Vector2 prev_goal_location;
-		//Vector2 prev_cursor_location;
-		//Vector2 location;
+		D3DXVECTOR2 tether_offset;
+		D3DXVECTOR2 last_virtual_cursor_location;
+		D3DXVECTOR2 prev_location;
+		D3DXVECTOR2 prev_goal_location;
+		D3DXVECTOR2 prev_cursor_location;
+		D3DXVECTOR2 location;
 	public:
 		static Camera* Instance()
 		{

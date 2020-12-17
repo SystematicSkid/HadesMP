@@ -56,5 +56,13 @@ namespace engine
 				DWORD64 CONST shake = Memory::GetCallAddress("E8 ? ? ? ? C7 45 ? ? ? ? ? 48 8D 55 D7");
 			}
 		}
+
+		namespace playermanager
+		{
+			namespace functions
+			{
+				DWORD64 CONST instance = Memory::GetCallAddress("E8 ? ? ? ? 0F B6 4D 04");
+			}
+		}
 	}
 }
