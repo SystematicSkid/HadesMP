@@ -38,6 +38,7 @@
 #include "./Classes/scriptmanager.h"
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"
+#include "./Classes/app.h"
 
 /* Utility Classes */
 #include "./Classes/Misc/rectangle.h"
@@ -52,7 +53,9 @@
 #include "./Classes/Hades/Unit/rendercomponent.h"
 #include "./Classes/Hades/Unit/components.h"
 #include "./Classes/Hades/Unit/thing.h"
+#include "./Classes/Hades/Unit/weapon.h"
 #include "./Classes/Hades/Unit/unitdata.h"
+#include "./Classes/Hades/Unit/unit.h"
 
 #include "./Classes/Hades/camera.h"
 #include "./Classes/Hades/player.h"

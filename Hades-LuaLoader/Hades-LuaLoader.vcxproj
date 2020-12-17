@@ -151,6 +151,7 @@
     <ClInclude Include="Core\Hooks\directx.h" />
     <ClInclude Include="Core\Hooks\hooks.h" />
     <ClInclude Include="Engine\addresses.h" />
+    <ClInclude Include="Engine\Classes\app.h" />
     <ClInclude Include="Engine\Classes\filestream.h" />
     <ClInclude Include="Engine\Classes\Hades\camera.h" />
     <ClInclude Include="Engine\Classes\Hades\gamedata.h" />
@@ -160,7 +161,9 @@
     <ClInclude Include="Engine\Classes\Hades\Unit\components.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\rendercomponent.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\thing.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\unit.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\unitdata.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\weapon.h" />
     <ClInclude Include="Engine\Classes\Misc\bounds.h" />
     <ClInclude Include="Engine\Classes\Misc\color.h" />
     <ClInclude Include="Engine\Classes\Misc\hash.h" />

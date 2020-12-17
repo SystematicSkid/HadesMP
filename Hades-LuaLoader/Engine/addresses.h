@@ -35,6 +35,11 @@ namespace engine
 			}
 		}
 
+		namespace hash
+		{
+			DWORD64 CONST instance = Memory::GetInstanceAddress("4C 8B 05 ? ? ? ? 4C 03 C3");
+		}
+
 		namespace renderer
 		{
 			DWORD64 CONST instance = Memory::GetInstanceAddress("48 8B 0D ? ? ? ? 48 85 C9 75 07");
@@ -79,6 +84,23 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST move_input = Memory::GetCallAddress("E8 ? ? ? ? 4C 8B 47 18");
+			}
+		}
+
+		namespace unitstatus
+		{
+			namespace functions
+			{
+				DWORD64 CONST can_attack = Memory::SigScan("48 89 5C 24 ? 80 3D ? ? ? ? ? 44 0F B6 DA");
+			}
+		}
+
+		namespace weapon
+		{
+			namespace functions
+			{
+				DWORD64 CONST request_fire = Memory::GetCallAddress("E8 ? ? ? ? 49 83 C4 08");
+				DWORD64 CONST tostring = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F0 48 8B 03 4C 8B 80");
 			}
 		}
 	}

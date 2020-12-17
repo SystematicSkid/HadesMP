@@ -9,15 +9,15 @@
 
 namespace core::hooks
 {
-	std::function<void(float)> on_update = nullptr;
+	std::function<void(engine::App*, float)> on_update = nullptr;
 
 	PVOID original_update = nullptr;
 
-	void __fastcall hook_update(DWORD64* app, float elapsed_seconds)
+	void __fastcall hook_update(engine::App* app, float elapsed_seconds)
 	{
 		if (on_update)
-			on_update(elapsed_seconds);
-		return static_cast<void(__fastcall*)(DWORD64*, float)>(original_update)(app, elapsed_seconds);
+			on_update(app, elapsed_seconds);
+		return static_cast<void(__fastcall*)(engine::App*, float)>(original_update)(app, elapsed_seconds);
 	}
 
 	bool has_loaded_player = false;

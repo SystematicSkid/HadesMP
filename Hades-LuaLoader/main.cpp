@@ -11,6 +11,7 @@ bool init_lua = true;
 
 bool has_loaded_new_player = false;
 engine::hades::Thing* unit = nullptr;
+bool fired = false;
 
 void init()
 {
@@ -36,11 +37,11 @@ void init()
 
 	//if (!proxy.Init())
 	//	MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
-
-	core::hooks::on_update = [=](float dt)
+	core::hooks::on_update = [=](engine::App* app,float dt)
 	{
 		auto player_manager = engine::hades::PlayerManager::Instance();
-
+		auto controllable_unit = player_manager->players[0]->active_unit;
+		// We need to verify that the lua handler has already assigned our player's active unit
 		if (!has_loaded_new_player && global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit)
 		{
 			printf("\n\nCreating new unit!\n");
@@ -70,6 +71,31 @@ void init()
 					unit->MoveInput(&player_unit->location, 1.0, false, dt);
 			}
 		}
+
+		if (controllable_unit)
+		{
+			auto unit_type = (engine::hades::Unit*)controllable_unit;
+		
+
+			//printf("Weapon: %s\n", unit_type->arsenal.mControllableWeapons[0]->ToString().c_str());
+			/*int len = unit_type->arsenal.mControllableWeapons.size();
+			for (int i = 0; i < len; i++)
+			{
+				printf("[ %i ] ", i);
+				printf("%s\n", unit_type->arsenal.mControllableWeapons[i]->pData->name.ToString());
+			}*/
+
+			if (unit_type->status.CanAttack(false))
+			{
+				// 0 - Dash
+				// 1 - Cast?
+				// 2/3 - Special
+				unit_type->arsenal.mControllableWeapons[0]->RequestFire(1.f, controllable_unit->location, controllable_unit);
+				fired = true;
+			}
+		}
+
+		printf("App 0x%p\n", app);
 
 		/*if(init_lua)
 		{
