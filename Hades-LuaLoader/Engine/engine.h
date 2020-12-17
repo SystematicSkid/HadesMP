@@ -30,13 +30,27 @@
 
 /* Enums */
 #include "./Enums/filesystem.h"
+#include "./Enums/rtti.h"
 
 /* Classes */
+#include "./Classes/rtti.h"
 #include "./Classes/renderer.h"
 #include "./Classes/scriptmanager.h"
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"
 
+/* Utility Classes */
+#include "./Classes/Misc/rectangle.h"
+#include "./Classes/Misc/hash.h"
+#include "./Classes/Misc/soundcue.h"
+#include "./Classes/Misc/color.h"
+#include "./Classes/Misc/bounds.h"
+
 /* Game Classes */
+#include "./Classes/Hades/Unit/rendercomponent.h"
+#include "./Classes/Hades/Unit/components.h"
+#include "./Classes/Hades/Unit/thing.h"
+
 #include "./Classes/Hades/camera.h"
+#include "./Classes/Hades/player.h"
 #include "./Classes/Hades/playermanager.h"

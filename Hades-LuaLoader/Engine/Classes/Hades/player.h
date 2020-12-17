@@ -12,7 +12,7 @@ namespace engine::hades
 		int controller_index;
 		int index;
 		D3DXVECTOR2 cursor_location;
-		DWORD64 active_unit;
+		hades::Thing* active_unit;
 		DWORD64 ai;
 		// TODO: Maybe finish this?
 	};

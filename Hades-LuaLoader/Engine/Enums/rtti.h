@@ -1,0 +1,48 @@
+#pragma once
+
+namespace engine
+{
+	enum RttiType
+	{
+		Component = 0x1,
+		Effect = 0x2,
+		Weapon = 0x4,
+		GameEvent = 0x8,
+		IUndoRedoRecord = 0x10,
+		Thing = 0x21,
+		Animation = 0x41,
+		Light = 0x81,
+		Obstacle = 0x121,
+		Unit = 0x221,
+		Projectile = 0x421,
+		ArcProjectile = 0xC21,
+		BeamProjectile = 0x1421,
+		HomingProjectile = 0x2421,
+		InstantProjectile = 0x4421,
+		LobProjectile = 0x8421,
+		SkyProjectile = 0x10421,
+		BookAnimation = 0x20041,
+		SlideAnimation = 0x60041,
+		ConstantAnimation = 0x80041,
+		DatalessAnimation = 0x100041,
+		PlayerUnit = 0x200221,
+		TagEffect = 0x22,
+		CharmEffect = 0x42,
+		SpeedEffect = 0x82,
+		WeaponFireEffect = 0x102,
+		InvulnerableEffect = 0x202,
+		DamageOverTimeEffect = 0x402,
+		DelayedKnockbackEffect = 0x802,
+		ProjectileDefenseEffect = 0x1002,
+		DamageOverDistanceEffect = 0x2002,
+		BlinkWeapon = 0x24,
+		GunWeapon = 0x44,
+		RamWeapon = 0x84,
+		DelayedGameEvent = 0x28,
+		ScriptUpdateGameEvent = 0x48,
+		UpdateGameEvent = 0x88,
+		PersistentGameEvent = 0x108,
+		UndoTransaction = 0x30,
+		UndoRedoRecord = 0x50,
+	};
+}

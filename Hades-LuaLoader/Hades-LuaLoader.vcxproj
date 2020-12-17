@@ -81,6 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,11 +151,24 @@
     <ClInclude Include="Core\Hooks\hooks.h" />
     <ClInclude Include="Engine\addresses.h" />
     <ClInclude Include="Engine\Classes\filestream.h" />
+    <ClInclude Include="Engine\Classes\Hades\camera.h" />
+    <ClInclude Include="Engine\Classes\Hades\player.h" />
+    <ClInclude Include="Engine\Classes\Hades\playermanager.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\components.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\rendercomponent.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\thing.h" />
+    <ClInclude Include="Engine\Classes\Misc\bounds.h" />
+    <ClInclude Include="Engine\Classes\Misc\color.h" />
+    <ClInclude Include="Engine\Classes\Misc\hash.h" />
+    <ClInclude Include="Engine\Classes\Misc\rectangle.h" />
+    <ClInclude Include="Engine\Classes\Misc\soundcue.h" />
     <ClInclude Include="Engine\Classes\platformfile.h" />
     <ClInclude Include="Engine\Classes\renderer.h" />
+    <ClInclude Include="Engine\Classes\rtti.h" />
     <ClInclude Include="Engine\Classes\scriptmanager.h" />
     <ClInclude Include="Engine\engine.h" />
     <ClInclude Include="Engine\Enums\filesystem.h" />
+    <ClInclude Include="Engine\Enums\rtti.h" />
     <ClInclude Include="Utilities\memory.h" />
     <ClInclude Include="Utilities\proxy.h" />
   </ItemGroup>

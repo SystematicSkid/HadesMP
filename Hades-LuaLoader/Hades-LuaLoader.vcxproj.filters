@@ -31,6 +31,15 @@
     <Filter Include="Header Files\Core\Hooks">
       <UniqueIdentifier>{7ef7a354-f887-499a-8cf7-aa28cc87cbf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine\Classes\Hades">
+      <UniqueIdentifier>{c7208259-b490-495f-9c6b-6d76ce9c2bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Classes\Hades\Unit">
+      <UniqueIdentifier>{756acefc-abc7-45cd-9c5e-239e11ae1cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Classes\Misc">
+      <UniqueIdentifier>{b4a9793b-2f4a-4c11-abf1-d0b053c72174}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,6 +79,45 @@
     </ClInclude>
     <ClInclude Include="Core\Hooks\hooks.h">
       <Filter>Header Files\Core\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\camera.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\playermanager.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\player.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Enums\rtti.h">
+      <Filter>Header Files\Engine\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\rtti.h">
+      <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\rectangle.h">
+      <Filter>Header Files\Engine\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\hash.h">
+      <Filter>Header Files\Engine\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\soundcue.h">
+      <Filter>Header Files\Engine\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\color.h">
+      <Filter>Header Files\Engine\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\components.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\bounds.h">
+      <Filter>Header Files\Engine\Classes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\rendercomponent.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\thing.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
