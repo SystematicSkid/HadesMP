@@ -31,6 +31,7 @@
 /* Enums */
 #include "./Enums/filesystem.h"
 #include "./Enums/rtti.h"
+#include "./Enums/map.h"
 
 /* Classes */
 #include "./Classes/rtti.h"
@@ -56,6 +57,9 @@
 #include "./Classes/Hades/Unit/weapon.h"
 #include "./Classes/Hades/Unit/unitdata.h"
 #include "./Classes/Hades/Unit/unit.h"
+
+/* World Classes */
+#include "./Classes/Hades/World/map.h"
 
 #include "./Classes/Hades/camera.h"
 #include "./Classes/Hades/player.h"
