@@ -164,6 +164,8 @@
     <ClInclude Include="Engine\Classes\Hades\Unit\unit.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\unitdata.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\weapon.h" />
+    <ClInclude Include="Engine\Classes\Hades\World\map.h" />
+    <ClInclude Include="Engine\Classes\Hades\World\world.h" />
     <ClInclude Include="Engine\Classes\Misc\bounds.h" />
     <ClInclude Include="Engine\Classes\Misc\color.h" />
     <ClInclude Include="Engine\Classes\Misc\hash.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="Engine\Classes\scriptmanager.h" />
     <ClInclude Include="Engine\engine.h" />
     <ClInclude Include="Engine\Enums\filesystem.h" />
+    <ClInclude Include="Engine\Enums\map.h" />
     <ClInclude Include="Engine\Enums\rtti.h" />
     <ClInclude Include="Utilities\memory.h" />
     <ClInclude Include="Utilities\proxy.h" />

@@ -103,5 +103,22 @@ namespace engine
 				DWORD64 CONST tostring = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F0 48 8B 03 4C 8B 80");
 			}
 		}
+
+		namespace world
+		{
+			namespace functions
+			{
+				DWORD64 CONST load_next_map = Memory::GetCallAddress("E8 ? ? ? ? 90 0F B6 45 DF C0 E8 07 24 01 74 10 48 8B 4D C8 48 85 C9 74 07 FF 15 ? ? ? ? 90 0F B6 45 27");
+			}
+			DWORD64 CONST instance = Memory::GetInstanceAddress("48 89 05 ? ? ? ? 83 78 0C 00 7E 40");
+		}
+
+		namespace map
+		{
+			namespace functions
+			{
+				DWORD64 CONST load_map = Memory::SigScan("48 8B C4 55 41 56 41 57 48 8D 68 A1 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 37 48 8B D9");
+			}
+		}
 	}
 }

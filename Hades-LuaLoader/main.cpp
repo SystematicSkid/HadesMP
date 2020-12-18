@@ -10,7 +10,6 @@ Proxy proxy;
 bool init_lua = true;
 
 bool has_loaded_new_player = false;
-engine::hades::Thing* unit = nullptr;
 bool fired = false;
 
 void init()
@@ -42,34 +41,24 @@ void init()
 		auto player_manager = engine::hades::PlayerManager::Instance();
 		auto controllable_unit = player_manager->players[0]->active_unit;
 		// We need to verify that the lua handler has already assigned our player's active unit
-		if (!has_loaded_new_player && global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit)
+		if (global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit && !global::replicated_unit)
 		{
 			printf("\n\nCreating new unit!\n");
 			printf("Location: %f %f\n", global::spawn_location.x, global::spawn_location.y);
 			printf("Data: 0x%p\n", global::new_unit_data);
 			printf("Thing: 0x%p\n", global::new_map_thing);
-			unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
-			printf("unit: 0x%p\n", unit);
-			if (unit)
-			{
-				//auto player_manager = engine::hades::PlayerManager::Instance();
-				//player_manager->players[0]->active_unit = unit;
-				// Assign current unit to player
-				//auto new_player = engine::hades::PlayerManager::Instance()->AddPlayer(1);
-				//new_player->active_unit = player;
-			}
-
-			has_loaded_new_player = true;
+			global::replicated_unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
+			printf("unit: 0x%p\n", global::replicated_unit);
 		}
 
-		if (unit)
+		if (global::replicated_unit)
 		{
 			if(player_manager)
 			{
 				auto player_unit = player_manager->players[0]->active_unit;
-				if (player_unit && unit)
+				if (player_unit && global::replicated_unit)
 				{
-					unit->MoveInput(&player_unit->location, 1.0, false, dt);
+					global::replicated_unit->MoveInput(&player_unit->location, 1.0, false, dt);
 				}
 			}
 		}
@@ -118,9 +107,6 @@ void init()
 			init_lua = false;
 		}*/
 	};
-
-	printf("PlayerManager: 0x%p\n", engine::hades::PlayerManager::Instance());
-
 	core::hooks::initialize();
 
 	//FreeLibraryAndExitThread(dll, 0x1); // We're done, unload

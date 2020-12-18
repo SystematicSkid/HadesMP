@@ -23,5 +23,14 @@ namespace engine::hades
 		D3DXVECTOR3 mAmbientLightColor;
 		MapData* mData;
 		std::string mPreviousMapName;
+
+	public:
+		// Methods
+		
+		// Will not work if not used properly!
+		static void LoadMap(std::string name)
+		{
+			return static_cast<void(__fastcall*)(std::string)>((PVOID)engine::addresses::map::functions::load_map)(name);
+		}
 	};
 }

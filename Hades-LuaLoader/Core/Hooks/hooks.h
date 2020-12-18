@@ -87,10 +87,19 @@ namespace core::hooks
 	PVOID original_request_fire = nullptr;
 	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
 	{
-		printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
-		if (weapon->pGainedControlFrom)
-			printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
+		//printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
+		//if (weapon->pGainedControlFrom)
+		//	printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
 		return static_cast<bool(__fastcall*)(engine::hades::Weapon*, float, D3DXVECTOR2, engine::hades::Thing*)>(original_request_fire)(weapon, angle, target_location, target);
+	}
+
+	PVOID original_load_next_map = nullptr;
+	void __fastcall hook_load_next_map(engine::hades::World* world, std::string* map_name, int request, engine::misc::Color loading_bg_color)
+	{
+		has_loaded_player = false;
+		global::replicated_unit = nullptr;
+		printf("Reset map\n");
+		return static_cast<void(__fastcall*)(engine::hades::World*, std::string*, int, engine::misc::Color)>(original_load_next_map)(world, map_name, request, loading_bg_color);
 	}
 
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
@@ -142,7 +151,8 @@ namespace core::hooks
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::request_fire, &hook_request_fire, &original_request_fire);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::request_fire);
 		
-
+		MH_CreateHook((PVOID)engine::addresses::world::functions::load_next_map, &hook_load_next_map, &original_load_next_map);
+		MH_EnableHook((PVOID)engine::addresses::world::functions::load_next_map);
 		// Script load hook
 
 		// Prevent unloading

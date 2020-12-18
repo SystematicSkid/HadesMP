@@ -60,6 +60,7 @@
 
 /* World Classes */
 #include "./Classes/Hades/World/map.h"
+#include "./Classes/Hades/World/world.h"
 
 #include "./Classes/Hades/camera.h"
 #include "./Classes/Hades/player.h"
@@ -72,5 +73,6 @@ namespace global
 	engine::hades::MapThing* new_map_thing = nullptr;
 	D3DXVECTOR2 spawn_location;
 
+	engine::hades::Thing* replicated_unit = nullptr;
 	engine::hades::Thing* original_unit = nullptr;
 }

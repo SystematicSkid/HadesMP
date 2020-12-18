@@ -40,6 +40,9 @@
     <Filter Include="Header Files\Engine\Classes\Misc">
       <UniqueIdentifier>{b4a9793b-2f4a-4c11-abf1-d0b053c72174}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine\Classes\Hades\World">
+      <UniqueIdentifier>{b7fbb0c5-90a6-4b94-9309-435a0e1dd5ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Classes\app.h">
       <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\World\map.h">
+      <Filter>Header Files\Engine\Classes\Hades\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Enums\map.h">
+      <Filter>Header Files\Engine\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\World\world.h">
+      <Filter>Header Files\Engine\Classes\Hades\World</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

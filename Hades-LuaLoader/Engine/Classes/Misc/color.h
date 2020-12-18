@@ -2,7 +2,7 @@
 
 namespace engine::misc
 {
-	class Color
+	struct Color
 	{
 		unsigned int v;
 		char r;
