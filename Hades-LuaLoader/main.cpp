@@ -34,8 +34,8 @@ void init()
 	::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);
 	::freopen_s(&pNewStderr, "CONOUT$", "w", stderr);
 
-	//if (!proxy.Init())
-	//	MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
+	if (!proxy.Init())
+		MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
 	core::hooks::on_update = [=](engine::App* app,float dt)
 	{
 		auto player_manager = engine::hades::PlayerManager::Instance();
