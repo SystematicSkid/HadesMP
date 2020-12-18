@@ -67,8 +67,10 @@ void init()
 			if(player_manager)
 			{
 				auto player_unit = player_manager->players[0]->active_unit;
-				if(player_unit)
+				if (player_unit && unit)
+				{
 					unit->MoveInput(&player_unit->location, 1.0, false, dt);
+				}
 			}
 		}
 
@@ -82,20 +84,18 @@ void init()
 			for (int i = 0; i < len; i++)
 			{
 				printf("[ %i ] ", i);
-				printf("%s\n", unit_type->arsenal.mControllableWeapons[i]->pData->name.ToString());
+				printf("%s\n", unit_type->arsenal.mWeapons[i]->pData->name.ToString());
 			}*/
 
-			if (unit_type->status.CanAttack(false))
+			/*if (unit_type->status.CanAttack(false))
 			{
 				// 0 - Dash
 				// 1 - Cast?
 				// 2/3 - Special
 				unit_type->arsenal.mControllableWeapons[0]->RequestFire(1.f, controllable_unit->location, controllable_unit);
 				fired = true;
-			}
+			}*/
 		}
-
-		printf("App 0x%p\n", app);
 
 		/*if(init_lua)
 		{

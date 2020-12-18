@@ -84,6 +84,15 @@ namespace core::hooks
 		return ret;
 	}
 
+	PVOID original_request_fire = nullptr;
+	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
+	{
+		printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
+		if (weapon->pGainedControlFrom)
+			printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
+		return static_cast<bool(__fastcall*)(engine::hades::Weapon*, float, D3DXVECTOR2, engine::hades::Thing*)>(original_request_fire)(weapon, angle, target_location, target);
+	}
+
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
 	{
 		uint8_t shell[] =
@@ -129,7 +138,9 @@ namespace core::hooks
 		MH_Initialize();
 		MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit, &hook_create_player_unit, &original_create_player);
 		MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit);
-		printf("Original: 0x%p\n", original_create_player);
+
+		MH_CreateHook((PVOID)engine::addresses::weapon::functions::request_fire, &hook_request_fire, &original_request_fire);
+		MH_EnableHook((PVOID)engine::addresses::weapon::functions::request_fire);
 		
 
 		// Script load hook
