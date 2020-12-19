@@ -52,6 +52,7 @@
 
 /* Game Classes */
 #include "./Classes/Hades/Unit/rendercomponent.h"
+#include "./Classes/Hades/Unit/animation.h"
 #include "./Classes/Hades/Unit/components.h"
 #include "./Classes/Hades/Unit/thing.h"
 #include "./Classes/Hades/Unit/weapon.h"

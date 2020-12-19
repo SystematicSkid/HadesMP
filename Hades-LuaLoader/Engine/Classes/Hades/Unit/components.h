@@ -27,4 +27,25 @@ namespace engine::hades
 		engine::misc::Color mBaseColor;
 		D3DXVECTOR3 hsv;
 	};
+
+	class LifeComponent : IThingComponent
+	{
+		bool mTargetable;
+		bool mIsInvulnerable;
+		bool mIsPlayerControlled;
+		bool mIsObstacle;
+		int mActiveHitFxCount;
+		int mConsecutiveHits;
+		float mInvulnerableCoverage;
+		float mInvulnerableCoverageOffset;
+		float mDodgeChance;
+		float mArmorCoverage;
+		float mCollisionDamageMultiplier;
+		float mDamageTakenMultiplier;
+		float mConsecutiveHitWindow;
+		float mActiveHitFxCooldown;
+		float mReflection;
+		LifeData* pData;
+		Animation* pInvulnerableFx;
+	};
 }

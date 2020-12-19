@@ -142,6 +142,7 @@ namespace engine::hades
 		D3DXVECTOR3 direction;
 		ThingData* thing_data;
 		BodyComponent* body;
+		LifeComponent* pLife;
 
 	public:
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)

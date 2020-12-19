@@ -319,9 +319,23 @@ namespace engine::hades
 				(this, angle, target_location, target);
 		}
 
+		// Use Hash ToString!
 		std::string ToString()
 		{
 			return static_cast<std::string(__fastcall*)(Weapon*)>((PVOID)engine::addresses::weapon::functions::tostring)(this);
+		}
+
+		std::vector<Weapon*> GetChildren(WeaponArsenal arsenal)
+		{
+			std::vector<Weapon*> result;
+			for (auto weapon : arsenal.mControllableWeapons)
+			{
+				if(weapon == this)
+					continue;
+				if (weapon->pGainedControlFrom == this)
+					result.push_back(weapon);
+			}
+			return result;
 		}
 	};
 }
