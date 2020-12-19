@@ -143,6 +143,12 @@ namespace engine::hades
 		ThingData* thing_data;
 		BodyComponent* body;
 		LifeComponent* pLife;
+		PhysicsComponent* pPhysics;
+		VacuumComponent* pVacuum;
+		MagnetismComponent* pMagnetism;
+		DWORD64 pLightOccluder;
+		TranslateComponent* pTranslate;
+		PlayerNearbyComponent* pPlayerNearby;
 
 	public:
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)

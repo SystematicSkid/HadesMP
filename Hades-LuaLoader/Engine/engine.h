@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string.h>
 #include <vector>
+#include <optional>
 
 /* Windows */
 #include <Windows.h>
