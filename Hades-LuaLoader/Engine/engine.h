@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <string.h>
 #include <vector>
+#include <optional>
+#include <unordered_map>
 
 /* Windows */
 #include <Windows.h>
@@ -52,11 +54,14 @@
 
 /* Game Classes */
 #include "./Classes/Hades/Unit/rendercomponent.h"
+#include "./Classes/Hades/Unit/animation.h"
 #include "./Classes/Hades/Unit/components.h"
 #include "./Classes/Hades/Unit/thing.h"
 #include "./Classes/Hades/Unit/weapon.h"
+#include "./Classes/Hades/Unit/pathfinding.h"
 #include "./Classes/Hades/Unit/unitdata.h"
 #include "./Classes/Hades/Unit/unit.h"
+#include "./Classes/Hades/Unit/playerunit.h"
 
 /* World Classes */
 #include "./Classes/Hades/World/map.h"

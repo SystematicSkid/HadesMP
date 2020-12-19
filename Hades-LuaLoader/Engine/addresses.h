@@ -37,6 +37,11 @@ namespace engine
 
 		namespace hash
 		{
+			namespace functions
+			{
+				DWORD64 CONST string_intern = Memory::GetCallAddress("E8 ? ? ? ? 89 47 0C");
+			}
+
 			DWORD64 CONST instance = Memory::GetInstanceAddress("4C 8B 05 ? ? ? ? 4C 03 C3");
 		}
 
@@ -87,6 +92,14 @@ namespace engine
 			}
 		}
 
+		namespace playerunit
+		{
+			namespace functions
+			{
+				DWORD64 CONST move_to = Memory::SigScan("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC 40 48 8B FA");
+			}
+		}
+
 		namespace unitstatus
 		{
 			namespace functions
@@ -101,6 +114,7 @@ namespace engine
 			{
 				DWORD64 CONST request_fire = Memory::GetCallAddress("E8 ? ? ? ? 49 83 C4 08");
 				DWORD64 CONST tostring = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F0 48 8B 03 4C 8B 80");
+				DWORD64 CONST can_fire = Memory::GetCallAddress("E8 ? ? ? ? 84 C0 74 39 8B 4B 30");
 			}
 		}
 
@@ -118,6 +132,22 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST load_map = Memory::SigScan("48 8B C4 55 41 56 41 57 48 8D 68 A1 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 37 48 8B D9");
+			}
+		}
+
+		namespace playerpathfinding
+		{
+			namespace functions
+			{
+				DWORD64 CONST get_next_path_step = Memory::GetCallAddress("E8 ? ? ? ? F3 44 0F 11 44 24 ? F3 0F 10 15");
+			}
+		}
+
+		namespace pathfinder
+		{
+			namespace functions
+			{
+				DWORD64 CONST calc_path = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 5F 18 8B 8B");
 			}
 		}
 	}

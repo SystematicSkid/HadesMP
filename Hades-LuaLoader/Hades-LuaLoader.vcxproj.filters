@@ -149,5 +149,14 @@
     <ClInclude Include="Engine\Classes\Hades\World\world.h">
       <Filter>Header Files\Engine\Classes\Hades\World</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\animation.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\playerunit.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\Unit\pathfinding.h">
+      <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -64,36 +64,6 @@ namespace engine::hades
 		float mOnDamagedSpin;
 	};
 
-	struct MoveAIData : public engine::hades::GameData
-	{
-		bool mStopToRotate;
-		bool mSlowToRotate;
-		bool mMoveWithoutPath;
-		bool mStayOnCamera;
-		bool mFinishAtGoal;
-		bool mRequiresLoS;
-		bool mIgnoreTargetForLoS;
-		BYTE mAlgorithm[1];
-		float mNodeDistance;
-		float mAlternateNodeDistance;
-		float mNodeSuccessDistance;
-		float mNodeSuccessDistanceRequiresLoS;
-		float mLookAheadDistance;
-		float mLookBehindDistance;
-		float mFailedPathfindTimeout;
-		float mRepathDelayMin;
-		float mRepathDelayMax;
-		float mRepathTargetMoveDistance;
-		float mRepathTimeout;
-		float mAvoidLocationDistance;
-		float mSuccessDistance;
-		float mLookAheadMultiplier;
-		float mTargetHeadingShift;
-		int mNodeCountLimit;
-		int mSkippedNodeLimit;
-		BYTE mOnFailBehavior[1];
-	};
-
 	class UnitData : public engine::hades::GameData
 	{
 	public:

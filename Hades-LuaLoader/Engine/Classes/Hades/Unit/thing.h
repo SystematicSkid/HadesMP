@@ -2,9 +2,12 @@
 
 namespace engine::hades
 {
+	
+
 	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;
+		int pad_0x4;
 		engine::misc::HashGuid graphic;
 		engine::misc::HashGuid activate_graphic;
 		engine::misc::HashGuid activate_fx;
@@ -142,6 +145,15 @@ namespace engine::hades
 		D3DXVECTOR3 direction;
 		ThingData* thing_data;
 		BodyComponent* body;
+		LifeComponent* pLife;
+		PhysicsComponent* pPhysics;
+		VacuumComponent* pVacuum;
+		MagnetismComponent* pMagnetism;
+		DWORD64 pLightOccluder;
+		TranslateComponent* pTranslate;
+		PlayerNearbyComponent* pPlayerNearby;
+		FlashComponent* pFlash;
+		ShakeComponent* pShake;
 
 	public:
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)
@@ -149,6 +161,12 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(Thing*, D3DXVECTOR2*, float, bool, float)>((PVOID)engine::addresses::unit::functions::move_input)
 				(this, location, speed_fraction, strafe, elapsed_seconds);
 		}
+	};
+
+	struct __declspec(align(8)) EntityLinkedObjectThing
+	{
+		Thing* mObject;
+		unsigned int mEntity;
 	};
 
 	struct MapThing

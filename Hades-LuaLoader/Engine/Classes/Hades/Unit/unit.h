@@ -3,12 +3,8 @@
 
 namespace engine::hades
 {
-	struct WeaponArsenal
-	{
-		class Unit* pOwner;
-		std::vector<engine::hades::Weapon*> mWeapons;
-		std::vector<engine::hades::Weapon*> mControllableWeapons;
-	};
+
+	
 
 	struct UnitStatus
 	{
@@ -47,5 +43,10 @@ namespace engine::hades
 	public:
 		WeaponArsenal arsenal;
 		UnitStatus status;
+		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mPrevColliding;
+		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mCurrentlyColliding;
+		// End
 	};
+
+	
 }
