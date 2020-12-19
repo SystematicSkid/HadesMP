@@ -39,6 +39,12 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(World*, std::string*, int, engine::misc::Color)>
 				((PVOID)engine::addresses::world::functions::load_next_map)(this, map_name, begin_request, load_color);
 		}
+
+		bool AddOutline(engine::hades::Thing* thing, engine::misc::Color col, float opacity, float thickness, float threshold, float duration, bool overlay, bool all_anims)
+		{
+			return static_cast<bool(__fastcall*)(engine::hades::Thing*, engine::misc::Color, float, float, float, float, bool, bool)>((PVOID)engine::addresses::world::functions::add_outline)
+				(thing, col, opacity, thickness, threshold, duration, overlay, all_anims);
+		}
 	};
 
 	engine::hades::World*& engine::hades::World::Instance = *(engine::hades::World**)(engine::addresses::world::instance);

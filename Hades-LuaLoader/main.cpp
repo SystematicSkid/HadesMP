@@ -48,7 +48,10 @@ void init()
 			printf("Data: 0x%p\n", global::new_unit_data);
 			printf("Thing: 0x%p\n", global::new_map_thing);
 
+
 			global::replicated_unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
+			printf("0x%p\n", engine::hades::World::Instance);
+
 			printf("unit: 0x%p\n", global::replicated_unit);
 		}
 
@@ -74,10 +77,20 @@ void init()
 
 		if (controllable_unit)
 		{
+			auto units = engine::hades::UnitManager::GetAllUnits();
+			for (int i = 0; i < engine::hades::UnitManager::GetNumUnits(); i++)
+			{
+				auto unit = units[i];
+				if(!unit)
+					continue;
+				printf("[ %i ] %s\n", i, unit->thing_data->graphic.ToString());
+			}
+
+			/* W2S Test */
 			float parallax = controllable_unit->GetParallaxAmount();
 			D3DXVECTOR2 screen;
 			engine::hades::Camera::Instance()->WorldToScreenParallax(&controllable_unit->location, &screen, parallax);
-			printf("%f %f\n", screen.x, screen.y);
+			//printf("%f %f\n", screen.x, screen.y);
 
 			auto unit_type = (engine::hades::Unit*)controllable_unit;
 
@@ -94,15 +107,24 @@ void init()
 				printf("[ %iB ] ", i);
 				printf("%s\n", unit_type->arsenal.mControllableWeapons[i]->pData->name.ToString());
 			}*/
-			engine::hades::Weapon* dash = unit_type->arsenal.mControllableWeapons[3];
-			if (dash->CanFire())
+			engine::hades::Weapon* dash = nullptr;
+			if(!dash)
+				dash = unit_type->arsenal.mControllableWeapons[3];
+			/*if (dash->CanFire())
 			{
 				// 0 - Dash
 				// 1 - Cast?
 				// 2/3 - Special
-				//printf("Requesting fire...\n");
-				//dash->RequestFire(1.f, controllable_unit->location, nullptr);
-			}
+				dash->RequestFire(1.f, controllable_unit->location, nullptr);
+				auto child = unit_type->arsenal.GetWeapon(dash->pData->mAddControlOnFire);
+				if (child)
+				{
+					unit_type->arsenal.AddWeaponControl(child);
+					dash = child;
+				}
+				else
+					dash = nullptr;
+			}*/
 		}
 		// Below is stuff for the original project... loading lua files XD
 		/*if(init_lua)

@@ -5,7 +5,7 @@ namespace engine::misc
 	struct Color
 	{
 		// Fields
-		unsigned int v;
+		unsigned int v = -1;
 		char r;
 		char g;
 		char b;
