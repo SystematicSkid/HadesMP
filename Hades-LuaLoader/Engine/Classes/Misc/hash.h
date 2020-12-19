@@ -10,7 +10,12 @@ namespace engine::misc
 		char* ToString()
 		{
 			DWORD64 hashes = *(DWORD64*)(engine::addresses::hash::instance);
-			return (char*)(hashes + id);
+			return (char*)((uintptr_t)hashes + id);
+		}
+
+		static unsigned int StringIntern(const char* s)
+		{
+			return static_cast<unsigned int(__fastcall*)(const char*)>((PVOID)engine::addresses::hash::functions::string_intern)(s);
 		}
 	};
 }

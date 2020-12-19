@@ -5,6 +5,7 @@ namespace engine::hades
 
 	class PlayerUnitInput
 	{
+	public:
 		class PlayerUnit* pOwner;
 		bool mCanMove;
 		bool mStopAtPathEnd;
@@ -27,6 +28,10 @@ namespace engine::hades
 	{
 	public:
 		std::unique_ptr<PlayerUnitInput> pInput;
+
+	public:
+		// Methods
+		//void MoveTo(D3DXVECTOR2* destination, )
 	};
 }
 

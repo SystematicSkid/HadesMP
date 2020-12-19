@@ -48,8 +48,9 @@ namespace engine::hades
 		bool mAlternateDistance;
 	};
 
-	struct PlayerPathFinding
+	class PlayerPathFinding
 	{
+	public:
 		bool mLastMoveGotPath;
 		BYTE mLastPathResult[1];
 		float mPathAge;
@@ -60,5 +61,27 @@ namespace engine::hades
 		std::vector<PathfinderNode> mPathNodes;
 		std::vector<PathfinderNode> mPath;
 		MoveAIData mMoveData;
+
+	public:
+		// Methods
+		D3DXVECTOR2* GetNextPathStep(D3DXVECTOR2* result, D3DXVECTOR2 target)
+		{
+			return static_cast<D3DXVECTOR2 * (__fastcall*)(PlayerPathFinding*, D3DXVECTOR2*, D3DXVECTOR2)>((PVOID)engine::addresses::playerpathfinding::functions::get_next_path_step)
+				(this, result, target);
+		}
+	};
+
+
+	class PathFinder
+	{
+	public:
+		// Methods
+
+		// The first arg should be Unit!
+		static bool CalcPath(Thing* unit, D3DXVECTOR2 goal, Thing* goal_thing, float success_distance)
+		{
+			return static_cast<bool(__fastcall*)(Thing*, D3DXVECTOR2, Thing*, float)>
+				((PVOID)engine::addresses::pathfinder::functions::calc_path)(unit, goal, goal_thing, success_distance);
+		}
 	};
 }

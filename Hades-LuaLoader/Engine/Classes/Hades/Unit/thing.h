@@ -7,6 +7,7 @@ namespace engine::hades
 	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;
+		int pad_0x4;
 		engine::misc::HashGuid graphic;
 		engine::misc::HashGuid activate_graphic;
 		engine::misc::HashGuid activate_fx;
