@@ -344,5 +344,10 @@ namespace engine::hades
 			}
 			return result;
 		}
+
+		bool CanFire()
+		{
+			return static_cast<bool(__fastcall*)(Weapon*)>((PVOID)engine::addresses::weapon::functions::can_fire)(this);
+		}
 	};
 }
