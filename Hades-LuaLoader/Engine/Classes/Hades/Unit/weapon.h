@@ -280,6 +280,13 @@ namespace engine::hades
 		std::vector<DWORD64> effects;
 	};
 
+	struct WeaponArsenal
+	{
+		class Unit* pOwner;
+		std::vector<class Weapon*> mWeapons;
+		std::vector<class Weapon*> mControllableWeapons;
+	};
+
 	class Weapon : public engine::Rtti
 	{
 	public:

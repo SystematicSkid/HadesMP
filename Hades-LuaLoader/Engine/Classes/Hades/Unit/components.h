@@ -45,7 +45,7 @@ namespace engine::hades
 		float mConsecutiveHitWindow;
 		float mActiveHitFxCooldown;
 		float mReflection;
-		LifeData* pData;
+		class LifeData* pData;
 		Animation* pInvulnerableFx;
 	};
 

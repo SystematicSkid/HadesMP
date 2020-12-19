@@ -4,6 +4,7 @@
 #include <string.h>
 #include <vector>
 #include <optional>
+#include <unordered_map>
 
 /* Windows */
 #include <Windows.h>

@@ -3,12 +3,6 @@
 
 namespace engine::hades
 {
-	struct WeaponArsenal
-	{
-		class Unit* pOwner;
-		std::vector<engine::hades::Weapon*> mWeapons;
-		std::vector<engine::hades::Weapon*> mControllableWeapons;
-	};
 
 	struct UnitStatus
 	{

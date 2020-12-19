@@ -149,6 +149,8 @@ namespace engine::hades
 		DWORD64 pLightOccluder;
 		TranslateComponent* pTranslate;
 		PlayerNearbyComponent* pPlayerNearby;
+		FlashComponent* pFlash;
+		ShakeComponent* pShake;
 
 	public:
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)
