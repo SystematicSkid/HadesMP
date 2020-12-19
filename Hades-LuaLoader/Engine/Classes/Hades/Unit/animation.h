@@ -2,7 +2,24 @@
 
 namespace engine::hades
 {
-
+	struct TransitionHelper
+	{
+		float mEaseIn;
+		float mEaseOut;
+		float mTimeModifierFraction;
+		std::function<void(void)> mOnUpdate;
+		bool mInitialized;
+		bool mPingPong;
+		bool mAngleValues;
+		bool mSmoothStep;
+		float mStartValue;
+		float mEndValue;
+		float mDuration;
+		float mTimeRemaining;
+		float mFraction;
+		float mUndoModifier;
+		float mPhaseOffset;
+	};
 	struct AnimationDataDef
 	{
 		bool mFlipHorizontal;

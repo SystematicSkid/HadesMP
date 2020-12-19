@@ -179,5 +179,11 @@
     <ClInclude Include="Engine\Classes\debug.h">
       <Filter>Header Files\Engine\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Classes\lua.h">
+      <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\polygon.h">
+      <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

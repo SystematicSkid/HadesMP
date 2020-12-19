@@ -123,6 +123,12 @@ namespace engine::hades
 		std::vector<DWORD64> mUsing;
 	};
 
+	struct __declspec(align(8)) EntityLinkedObjectThing
+	{
+		class Thing* mObject;
+		unsigned int mEntity;
+	};
+
 	class Thing : public RenderComponent
 	{
 	public:
@@ -154,6 +160,40 @@ namespace engine::hades
 		PlayerNearbyComponent* pPlayerNearby;
 		FlashComponent* pFlash;
 		ShakeComponent* pShake;
+		DWORD64 pText;
+		DWORD64 pMetering;
+		DWORD64 pSpeech;
+		DWORD64 pInteraction;
+		DWORD64 pAnim;
+		EntityLinkedObjectThing mAttachedTo;
+		LuaTable mAttachedLua;
+		std::vector<int> mGridSquares;
+		std::vector<int> mAttachmentIds;
+		std::vector<Animation*> mFrontAnims;
+		std::vector<Animation*> mBackAnims;
+		std::optional<Polygon> mGeometry;
+		DWORD64 pLight;
+		D3DXVECTOR2 mAttachOffset;
+		std::string mAsString;
+		bool mUseScreenLocation;
+		bool mFixGeometryWithZ;
+		bool padding0[2];
+		int mAmbientSpoundId;
+		volatile unsigned int mPrepped;
+		float mParallax;
+		float mOutlineOpacity;
+		float mLastImpulsedAnimTime;
+		BYTE mLifeStatus[1];
+		class MapThing* pMapThing;
+		class UnitManager* pManager;
+		int* pRef;
+		Polygon mMotionTestingPoly;
+		std::optional<TransitionHelper> mAdjustZ;
+		std::optional<TransitionHelper> mAdjustParallax;
+		std::vector<DWORD64> mGroupNames;
+		std::vector<class ThingComponent*> mComponents;
+		std::unordered_set<Animation*, std::hash<Animation*>, std::equal_to<Animation*>> mAttachedAnims; // eastl::hash_set
+		engine::misc::HashGuid mName;
 
 	public:
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)
@@ -166,13 +206,20 @@ namespace engine::hades
 		{
 			return static_cast<float(__fastcall*)(Thing*)>((PVOID)engine::addresses::thing::functions::get_parallax_amount)(this);
 		}
+
+		engine::misc::HashGuid* GetName(engine::misc::HashGuid* result)
+		{
+			PVOID* vtbl = *(PVOID**)this;
+			return static_cast<engine::misc::HashGuid * (__fastcall*)(Thing*, engine::misc::HashGuid*)>(vtbl[17])(this, result);
+		}
+
+		Animation* SetAnimation(engine::misc::HashGuid name, bool suppress_sounds, bool suppress_sounds_if_invisible)
+		{
+			return static_cast<Animation * (__fastcall*)(Thing*, engine::misc::HashGuid, bool, bool)>
+				((PVOID)engine::addresses::thing::functions::set_animation)(this, name, suppress_sounds, suppress_sounds_if_invisible);
+		}
 	};
 
-	struct __declspec(align(8)) EntityLinkedObjectThing
-	{
-		Thing* mObject;
-		unsigned int mEntity;
-	};
 
 	struct MapThing
 	{

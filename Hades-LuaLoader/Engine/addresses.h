@@ -93,6 +93,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST get_parallax_amount = Memory::GetCallAddress("E8 ? ? ? ? F3 44 0F 58 C0");
+				DWORD64 CONST set_animation = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 47 68");
 			}
 		}
 

@@ -4,7 +4,9 @@
 #include <string.h>
 #include <vector>
 #include <optional>
+#include <functional>
 #include <unordered_map>
+#include <unordered_set>
 
 /* Windows */
 #include <Windows.h>
@@ -45,6 +47,7 @@
 /* Classes */
 #include "./Classes/rtti.h"
 #include "./Classes/renderer.h"
+#include "./Classes/lua.h"
 #include "./Classes/scriptmanager.h"
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"
@@ -54,6 +57,7 @@
 #include "./Classes/Hades/gamedata.h"
 
 /* Game Classes */
+#include "./Classes/Hades/polygon.h"
 #include "./Classes/Hades/Unit/rendercomponent.h"
 #include "./Classes/Hades/Unit/animation.h"
 #include "./Classes/Hades/Unit/components.h"
