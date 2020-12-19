@@ -1,9 +1,7 @@
 #include <windows.h>
 #include <string>
 #include <fstream>
-#include "./Engine/engine.h"
-#include "./Core/Hooks/hooks.h"
-#include "./Utilities/proxy.h"
+#include "./Core/core.h"
 
 HMODULE dll;
 Proxy proxy;
@@ -36,6 +34,8 @@ void init()
 
 	if (!proxy.Init())
 		MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
+
+
 	core::hooks::on_update = [=](engine::App* app,float dt)
 	{
 		auto player_manager = engine::hades::PlayerManager::Instance();
@@ -47,6 +47,7 @@ void init()
 			printf("Location: %f %f\n", global::spawn_location.x, global::spawn_location.y);
 			printf("Data: 0x%p\n", global::new_unit_data);
 			printf("Thing: 0x%p\n", global::new_map_thing);
+
 			global::replicated_unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
 			printf("unit: 0x%p\n", global::replicated_unit);
 		}
@@ -58,7 +59,15 @@ void init()
 				auto player_unit = player_manager->players[0]->active_unit;
 				if (player_unit && global::replicated_unit)
 				{
-					global::replicated_unit->MoveInput(&player_unit->location, 1.0, false, dt);
+					engine::hades::PlayerUnitInput* input = *(engine::hades::PlayerUnitInput**)((uintptr_t)global::replicated_unit + 0x560);
+					D3DXVECTOR2 target_location = player_unit->location;
+					D3DXVECTOR2 move_location = D3DXVECTOR2();
+					if(input)
+					{
+						//engine::hades::PathFinder::CalcPath(global::replicated_unit, target_location, player_unit, 10.f /*Success Dist*/);
+						//input->pPlayerPathfinding->GetNextPathStep(&move_location, target_location);
+						global::replicated_unit->MoveInput(&target_location, 1.0, false, dt);
+					}
 				}
 			}
 		}
@@ -66,26 +75,31 @@ void init()
 		if (controllable_unit)
 		{
 			auto unit_type = (engine::hades::Unit*)controllable_unit;
-		
 
 			//printf("Weapon: %s\n", unit_type->arsenal.mControllableWeapons[0]->ToString().c_str());
-			/*int len = unit_type->arsenal.mControllableWeapons.size();
+			/*int len = unit_type->arsenal.mWeapons.size();
 			for (int i = 0; i < len; i++)
 			{
-				printf("[ %i ] ", i);
+				printf("[ %iA ] ", i);
 				printf("%s\n", unit_type->arsenal.mWeapons[i]->pData->name.ToString());
+			}
+			len = unit_type->arsenal.mControllableWeapons.size();
+			for (int i = 0; i < len; i++)
+			{
+				printf("[ %iB ] ", i);
+				printf("%s\n", unit_type->arsenal.mControllableWeapons[i]->pData->name.ToString());
 			}*/
-
-			/*if (unit_type->status.CanAttack(false))
+			engine::hades::Weapon* dash = unit_type->arsenal.mControllableWeapons[3];
+			if (dash->CanFire())
 			{
 				// 0 - Dash
 				// 1 - Cast?
 				// 2/3 - Special
-				unit_type->arsenal.mControllableWeapons[0]->RequestFire(1.f, controllable_unit->location, controllable_unit);
-				fired = true;
-			}*/
+				//printf("Requesting fire...\n");
+				//dash->RequestFire(1.f, controllable_unit->location, nullptr);
+			}
 		}
-
+		// Below is stuff for the original project... loading lua files XD
 		/*if(init_lua)
 		{
 			char* dir = engine::PlatformFile::GetResourceDirectory(engine::ResourceDirectory::RD_MIDDLEWARE_2);

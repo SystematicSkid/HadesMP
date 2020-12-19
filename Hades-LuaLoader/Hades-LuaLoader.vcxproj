@@ -148,8 +148,13 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\core.h" />
     <ClInclude Include="Core\Hooks\directx.h" />
     <ClInclude Include="Core\Hooks\hooks.h" />
+    <ClInclude Include="Core\Network\client.h" />
+    <ClInclude Include="Core\Network\defines.h" />
+    <ClInclude Include="Core\Network\serialization.h" />
+    <ClInclude Include="Core\Network\server.h" />
     <ClInclude Include="Engine\addresses.h" />
     <ClInclude Include="Engine\Classes\app.h" />
     <ClInclude Include="Engine\Classes\filestream.h" />

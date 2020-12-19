@@ -43,6 +43,9 @@
     <Filter Include="Header Files\Engine\Classes\Hades\World">
       <UniqueIdentifier>{b7fbb0c5-90a6-4b94-9309-435a0e1dd5ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Network">
+      <UniqueIdentifier>{966d6d35-9069-4632-9ca0-bd16b38a8867}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -157,6 +160,21 @@
     </ClInclude>
     <ClInclude Include="Engine\Classes\Hades\Unit\pathfinding.h">
       <Filter>Header Files\Engine\Classes\Hades\Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Network\client.h">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Network\defines.h">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Network\serialization.h">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Network\server.h">
+      <Filter>Header Files\Core\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\core.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
