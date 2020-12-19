@@ -48,5 +48,11 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(Camera*, float, float, float, float, float)>((PVOID)engine::addresses::camera::functions::shake)
 				(this, speed, distance, duration, angle, easeOutSpeed);
 		}
+
+		D3DXVECTOR2* WorldToScreenParallax(D3DXVECTOR2* world, D3DXVECTOR2* screen, float parallax)
+		{
+			return static_cast<D3DXVECTOR2 * (__fastcall*)(Camera*, D3DXVECTOR2*, D3DXVECTOR2*, float)>((PVOID)engine::addresses::camera::functions::worldtoscreen_parallax)
+				(this, screen, world, parallax);
+		}
 	};
 }

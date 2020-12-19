@@ -10,6 +10,8 @@
 namespace core::hooks
 {
 	std::function<void(engine::App*, float)> on_update = nullptr;
+	std::function<void(PVOID, float)> on_draw = nullptr;
+
 
 	PVOID original_update = nullptr;
 
@@ -98,8 +100,15 @@ namespace core::hooks
 	{
 		has_loaded_player = false;
 		global::replicated_unit = nullptr;
-		printf("Reset map\n");
 		return static_cast<void(__fastcall*)(engine::hades::World*, std::string*, int, engine::misc::Color)>(original_load_next_map)(world, map_name, request, loading_bg_color);
+	}
+
+	PVOID original_draw = nullptr;
+	void __fastcall hook_gameplayscreen_draw(PVOID thisptr, float elapsed_seconds)
+	{
+		if (on_draw)
+			on_draw(thisptr, elapsed_seconds);
+		return static_cast<void(__fastcall*)(PVOID, float)>(original_draw)(thisptr, elapsed_seconds);
 	}
 
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
@@ -153,6 +162,9 @@ namespace core::hooks
 		
 		MH_CreateHook((PVOID)engine::addresses::world::functions::load_next_map, &hook_load_next_map, &original_load_next_map);
 		MH_EnableHook((PVOID)engine::addresses::world::functions::load_next_map);
+
+		MH_CreateHook((PVOID)engine::addresses::gameplayscreen::functions::draw, &hook_gameplayscreen_draw, &original_draw);
+		MH_EnableHook((PVOID)engine::addresses::gameplayscreen::functions::draw);
 		// Script load hook
 
 		// Prevent unloading

@@ -141,7 +141,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>minhook/lib/MinHook.lib;slikenet/lib/SLikeNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>minhook/lib/MinHook.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -157,6 +157,7 @@
     <ClInclude Include="Core\Network\server.h" />
     <ClInclude Include="Engine\addresses.h" />
     <ClInclude Include="Engine\Classes\app.h" />
+    <ClInclude Include="Engine\Classes\debug.h" />
     <ClInclude Include="Engine\Classes\filestream.h" />
     <ClInclude Include="Engine\Classes\Hades\camera.h" />
     <ClInclude Include="Engine\Classes\Hades\gamedata.h" />

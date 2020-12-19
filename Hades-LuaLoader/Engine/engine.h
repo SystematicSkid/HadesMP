@@ -35,6 +35,13 @@
 #include "./Enums/rtti.h"
 #include "./Enums/map.h"
 
+/* Utility Classes */
+#include "./Classes/Misc/rectangle.h"
+#include "./Classes/Misc/hash.h"
+#include "./Classes/Misc/soundcue.h"
+#include "./Classes/Misc/color.h"
+#include "./Classes/Misc/bounds.h"
+
 /* Classes */
 #include "./Classes/rtti.h"
 #include "./Classes/renderer.h"
@@ -42,13 +49,7 @@
 #include "./Classes/filestream.h"
 #include "./Classes/platformfile.h"
 #include "./Classes/app.h"
-
-/* Utility Classes */
-#include "./Classes/Misc/rectangle.h"
-#include "./Classes/Misc/hash.h"
-#include "./Classes/Misc/soundcue.h"
-#include "./Classes/Misc/color.h"
-#include "./Classes/Misc/bounds.h"
+#include "./Classes/debug.h"
 
 #include "./Classes/Hades/gamedata.h"
 

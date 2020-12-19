@@ -64,6 +64,7 @@ namespace engine
 			{
 				DWORD64 CONST instance = Memory::GetCallAddress("E8 ? ? ? ? 80 78 03 00");
 				DWORD64 CONST shake = Memory::GetCallAddress("E8 ? ? ? ? C7 45 ? ? ? ? ? 48 8D 55 D7");
+				DWORD64 CONST worldtoscreen_parallax = Memory::GetCallAddress("E8 ? ? ? ? 0F 28 EE");
 			}
 		}
 
@@ -81,6 +82,14 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST create_player_unit = Memory::SigScan("48 8B C4 53 57 48 83 EC 58");
+			}
+		}
+
+		namespace thing
+		{
+			namespace functions
+			{
+				DWORD64 CONST get_parallax_amount = Memory::GetCallAddress("E8 ? ? ? ? F3 44 0F 58 C0");
 			}
 		}
 
@@ -148,6 +157,22 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST calc_path = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 5F 18 8B 8B");
+			}
+		}
+
+		namespace debug
+		{
+			namespace functions
+			{
+				DWORD64 CONST ui_draw_string = Memory::GetCallAddress("E8 ? ? ? ? 40 84 FF 74 2C");
+			}
+		}
+
+		namespace gameplayscreen
+		{
+			namespace functions
+			{
+				DWORD64 CONST draw = Memory::SigScan("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 18 0F 29 70 B8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 0F 28 F1 4C 8B F1");
 			}
 		}
 	}

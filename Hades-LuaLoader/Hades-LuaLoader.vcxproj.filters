@@ -176,5 +176,8 @@
     <ClInclude Include="Core\core.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Classes\debug.h">
+      <Filter>Header Files\Engine\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,8 +32,8 @@ void init()
 	::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);
 	::freopen_s(&pNewStderr, "CONOUT$", "w", stderr);
 
-	if (!proxy.Init())
-		MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
+	//if (!proxy.Init())
+	//	MessageBoxA(NULL, "An error occurred during initialization!", "Fatal Error", MB_ICONASTERISK);
 
 
 	core::hooks::on_update = [=](engine::App* app,float dt)
@@ -74,6 +74,11 @@ void init()
 
 		if (controllable_unit)
 		{
+			float parallax = controllable_unit->GetParallaxAmount();
+			D3DXVECTOR2 screen;
+			engine::hades::Camera::Instance()->WorldToScreenParallax(&controllable_unit->location, &screen, parallax);
+			printf("%f %f\n", screen.x, screen.y);
+
 			auto unit_type = (engine::hades::Unit*)controllable_unit;
 
 			//printf("Weapon: %s\n", unit_type->arsenal.mControllableWeapons[0]->ToString().c_str());
@@ -121,6 +126,14 @@ void init()
 			init_lua = false;
 		}*/
 	};
+
+	core::hooks::on_draw = [=](PVOID, float dt)
+	{
+		auto player_manager = engine::hades::PlayerManager::Instance();
+		auto controllable_unit = player_manager->players[0]->active_unit;
+	};
+
+
 	core::hooks::initialize();
 
 	//FreeLibraryAndExitThread(dll, 0x1); // We're done, unload
