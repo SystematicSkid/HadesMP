@@ -4,6 +4,8 @@
 namespace engine::hades
 {
 
+	
+
 	struct UnitStatus
 	{
 		bool mDisableMoveCancelable;
@@ -41,5 +43,10 @@ namespace engine::hades
 	public:
 		WeaponArsenal arsenal;
 		UnitStatus status;
+		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mPrevColliding;
+		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mCurrentlyColliding;
+		// End
 	};
+
+	
 }

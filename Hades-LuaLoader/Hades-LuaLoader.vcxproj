@@ -160,6 +160,8 @@
     <ClInclude Include="Engine\Classes\Hades\unitmanager.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\animation.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\components.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\pathfinding.h" />
+    <ClInclude Include="Engine\Classes\Hades\Unit\playerunit.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\rendercomponent.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\thing.h" />
     <ClInclude Include="Engine\Classes\Hades\Unit\unit.h" />

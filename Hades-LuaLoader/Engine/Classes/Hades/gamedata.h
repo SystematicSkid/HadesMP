@@ -4,7 +4,10 @@ namespace engine::hades
 {
 	struct GameData
 	{
-		virtual void unk1() = 0;
+		struct  
+		{
+			void(__fastcall* unk1)(GameData*);
+		}*vtbl;
 		engine::misc::HashGuid name;
 		engine::misc::HashGuid organization;
 		engine::misc::HashGuid inherit_from;

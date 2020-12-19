@@ -2,6 +2,8 @@
 
 namespace engine::hades
 {
+	
+
 	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;
@@ -158,6 +160,12 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(Thing*, D3DXVECTOR2*, float, bool, float)>((PVOID)engine::addresses::unit::functions::move_input)
 				(this, location, speed_fraction, strafe, elapsed_seconds);
 		}
+	};
+
+	struct __declspec(align(8)) EntityLinkedObjectThing
+	{
+		Thing* mObject;
+		unsigned int mEntity;
 	};
 
 	struct MapThing

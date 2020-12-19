@@ -58,8 +58,10 @@
 #include "./Classes/Hades/Unit/components.h"
 #include "./Classes/Hades/Unit/thing.h"
 #include "./Classes/Hades/Unit/weapon.h"
+#include "./Classes/Hades/Unit/pathfinding.h"
 #include "./Classes/Hades/Unit/unitdata.h"
 #include "./Classes/Hades/Unit/unit.h"
+#include "./Classes/Hades/Unit/playerunit.h"
 
 /* World Classes */
 #include "./Classes/Hades/World/map.h"
