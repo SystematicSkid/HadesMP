@@ -1,6 +1,6 @@
 #pragma once
 #include "./directx.h"
-#include <MinHook.h>
+#include <minhook/include/MinHook.h>
 
 /*
 	This entire file is pretty ugly simply because

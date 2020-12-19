@@ -81,8 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
-    <LibraryPath>../include;$(DXSDK_DIR)LIB\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>../3rdparty;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>../3rdparty;$(DXSDK_DIR)LIB\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -141,7 +141,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>MinHook.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>minhook/lib/MinHook.lib;slikenet/lib/SLikeNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
