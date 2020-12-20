@@ -46,6 +46,9 @@
     <Filter Include="Header Files\Core\Network">
       <UniqueIdentifier>{966d6d35-9069-4632-9ca0-bd16b38a8867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Renderer">
+      <UniqueIdentifier>{521e327c-06e5-4db3-8c8c-3c657b88e99a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Classes\Hades\polygon.h">
       <Filter>Header Files\Engine\Classes\Hades</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Renderer\renderer.h">
+      <Filter>Header Files\Core\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

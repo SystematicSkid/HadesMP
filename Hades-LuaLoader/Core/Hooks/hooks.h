@@ -99,6 +99,8 @@ namespace core::hooks
 	void __fastcall hook_load_next_map(engine::hades::World* world, std::string* map_name, int request, engine::misc::Color loading_bg_color)
 	{
 		has_loaded_player = false;
+		/* Reset our unit pointers */
+		global::original_unit = nullptr;
 		global::replicated_unit = nullptr;
 		return static_cast<void(__fastcall*)(engine::hades::World*, std::string*, int, engine::misc::Color)>(original_load_next_map)(world, map_name, request, loading_bg_color);
 	}
@@ -109,6 +111,22 @@ namespace core::hooks
 		if (on_draw)
 			on_draw(thisptr, elapsed_seconds);
 		return static_cast<void(__fastcall*)(PVOID, float)>(original_draw)(thisptr, elapsed_seconds);
+	}
+
+	PVOID original_check_team = nullptr;
+	bool __fastcall hook_has_same_team(engine::hades::Thing* thisptr, engine::hades::Thing* other)
+	{
+		if (global::original_unit && global::replicated_unit)
+		{
+			// Check if they are the same
+			if (thisptr == global::original_unit && other == global::replicated_unit)
+				return true;
+
+			if (thisptr == global::replicated_unit && other == global::original_unit)
+				return true;
+		}
+		// Otherwise do original
+		return static_cast<bool(__fastcall*)(engine::hades::Thing*, engine::hades::Thing*)>(original_check_team)(thisptr, other);
 	}
 
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
@@ -165,6 +183,9 @@ namespace core::hooks
 
 		MH_CreateHook((PVOID)engine::addresses::gameplayscreen::functions::draw, &hook_gameplayscreen_draw, &original_draw);
 		MH_EnableHook((PVOID)engine::addresses::gameplayscreen::functions::draw);
+
+		//MH_CreateHook((PVOID)engine::addresses::unit::functions::has_same_team, &hook_has_same_team, &original_check_team);
+		//MH_EnableHook((PVOID)engine::addresses::unit::functions::has_same_team);
 		// Script load hook
 
 		// Prevent unloading
@@ -175,5 +196,8 @@ namespace core::hooks
 		VirtualProtect((PVOID)address, 6, PAGE_EXECUTE_READWRITE, &protect);
 		memcpy((PVOID)address, nop, 6);
 		VirtualProtect((PVOID)address, 6, protect, &protect);
+
+		// DirectX hook
+		hooks::directx::initialize();
 	}
 }

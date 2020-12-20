@@ -48,6 +48,7 @@ namespace engine
 		namespace renderer
 		{
 			DWORD64 CONST instance = Memory::GetInstanceAddress("48 8B 0D ? ? ? ? 48 85 C9 75 07");
+			DWORD64 CONST swapchain_instance = Memory::GetInstanceAddress("48 8B 15 ? ? ? ? 45 33 C0 48 8B 4A 10");
 		}
 
 		namespace debug_overlay

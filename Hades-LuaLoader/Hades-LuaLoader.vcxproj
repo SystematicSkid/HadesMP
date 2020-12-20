@@ -130,7 +130,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
@@ -155,6 +155,7 @@
     <ClInclude Include="Core\Network\defines.h" />
     <ClInclude Include="Core\Network\serialization.h" />
     <ClInclude Include="Core\Network\server.h" />
+    <ClInclude Include="Core\Renderer\renderer.h" />
     <ClInclude Include="Engine\addresses.h" />
     <ClInclude Include="Engine\Classes\app.h" />
     <ClInclude Include="Engine\Classes\debug.h" />

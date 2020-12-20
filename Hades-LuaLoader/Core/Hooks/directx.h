@@ -5,34 +5,39 @@
 namespace core::hooks::directx
 {
 	/* Our Callback */
-	std::function<VOID(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)> OnPresent = nullptr;
+	std::function<VOID(IDXGISwapChain* pSwapChain)> on_present = nullptr;
 
 	/* Address of original functions */
 	PVOID original_present = NULL;
 
-	/* Raw callback of `DirectX->EndScene` */
-	HRESULT __stdcall hook_present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
+	/* Raw callback of `DirectX->OnPresent` */
+	DWORD64 __fastcall hook_present(IDXGISwapChain* pSwapChain, DWORD64 a2, DWORD64 a3, DWORD64* a4)
 	{
-		//auto protection_object = present_hook->GetProtectionObject();
-		// Call event `Hooks::DirectX->OnEndScene`
-		if (hooks::directx::OnPresent)
+		// Call event `Hooks::DirectX->OnPresent`
+		if (hooks::directx::on_present)
 		{
-			hooks::directx::OnPresent(pSwapChain, SyncInterval, Flags);
+			hooks::directx::on_present(pSwapChain);
 		}
 
+		printf("Hook\n");
+
 		// Return original function
-		return static_cast<HRESULT(__stdcall*)(IDXGISwapChain*, UINT, UINT)>((PVOID)original_present)(pSwapChain, SyncInterval, Flags);
+		return static_cast<DWORD64(__fastcall*)(IDXGISwapChain*, DWORD64,DWORD64, DWORD64*)>((PVOID)original_present)(pSwapChain, a2,a3,a4);
 	}
 
 	void initialize()
 	{
-		auto wnd = (HWND)FindWindowA("The Forge", NULL);
-		auto pSwapChain = engine::Renderer::Instance->context;
+		DWORD64* pSwapChain = engine::SwapChain::Instance->pDxSwapChain1;
+		if (!pSwapChain)
+			pSwapChain = engine::SwapChain::Instance->pDxSwapChain1;
+		printf("Swapchain: 0x%p\n", engine::SwapChain::Instance);
+		printf("Swapchain: 0x%p\n", pSwapChain);
 		DWORD64 myFunc = (DWORD64)hook_present;
 		DWORD64* engineInterface = (DWORD64*)*(DWORD64*)pSwapChain;
 
-		if (engineInterface[8] != myFunc)
+		if (engineInterface[0x16] != myFunc)
 		{
+			printf("Func: 0x%p\n", engineInterface[0x16]);
 			//Allocate some memory for our copy of the interface (vtable)
 			static DWORD64 myEngineInterface[208 + 150];
 
@@ -42,8 +47,8 @@ namespace core::hooks::directx
 			memcpy(&myEngineInterface, engineInterface, sizeof(myEngineInterface));
 			*(DWORD64*)pSwapChain = (DWORD64)&myEngineInterface;
 			//Now apply the hook to our interface.
-			original_present = (PVOID)myEngineInterface[8];
-			myEngineInterface[8] = (DWORD64)myFunc;
+			original_present = (PVOID)myEngineInterface[0x16];
+			myEngineInterface[0x16] = (DWORD64)myFunc;
 		}
 	}
 }
