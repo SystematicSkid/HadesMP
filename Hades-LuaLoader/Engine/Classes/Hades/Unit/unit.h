@@ -51,6 +51,28 @@ namespace engine::hades
 		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mPrevColliding;
 		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mCurrentlyColliding;
 		// End
+
+	public:
+		// Methods
+		void CopyArsenal(Unit* to_copy)
+		{
+			auto weapons_to_copy = to_copy->arsenal.mWeapons;
+			std::vector<Weapon*> new_array; // Holder for all copied weapons
+			for (auto weapon : weapons_to_copy)
+			{
+				Weapon* new_weapon = Weapon::Create(weapon->pData->name, this); // Generate new weapon pointer from data and unit type
+				if (new_weapon)
+					new_array.push_back(new_weapon);
+				else
+					printf("[ Error ] Failed to create new weapon!\n");
+			}
+			
+			this->arsenal.mWeapons.clear();
+			this->arsenal.mControllableWeapons.clear();
+			for (auto weapon : new_array)
+				this->arsenal.AddWeapon(weapon);
+
+		}
 	};
 
 	

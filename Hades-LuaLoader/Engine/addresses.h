@@ -141,6 +141,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST add_weapon_control = Memory::GetCallAddress("E8 ? ? ? ? 48 89 AE");
+				DWORD64 CONST add_weapon = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 8B ? ? ? ? 80 B9");
 			}
 		}
 

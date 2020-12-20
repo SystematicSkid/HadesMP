@@ -383,5 +383,11 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(WeaponArsenal*, Weapon*)>((PVOID)engine::addresses::weaponarsenal::functions::add_weapon_control)
 				(this, weapon);
 		}
+
+		void AddWeapon(Weapon* weapon)
+		{
+			return static_cast<void(__fastcall*)(WeaponArsenal*, Weapon*, bool)>((PVOID)engine::addresses::weaponarsenal::functions::add_weapon)
+				(this, weapon, false /* bundled */);
+		}
 	};
 }
