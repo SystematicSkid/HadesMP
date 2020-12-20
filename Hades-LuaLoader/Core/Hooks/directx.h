@@ -15,12 +15,7 @@ namespace core::hooks::directx
 	{
 		// Call event `Hooks::DirectX->OnPresent`
 		if (hooks::directx::on_present)
-		{
 			hooks::directx::on_present(pSwapChain);
-		}
-
-		printf("Hook\n");
-
 		// Return original function
 		return static_cast<DWORD64(__fastcall*)(IDXGISwapChain*, DWORD64,DWORD64, DWORD64*)>((PVOID)original_present)(pSwapChain, a2,a3,a4);
 	}
@@ -28,10 +23,6 @@ namespace core::hooks::directx
 	void initialize()
 	{
 		DWORD64* pSwapChain = engine::SwapChain::Instance->pDxSwapChain1;
-		if (!pSwapChain)
-			pSwapChain = engine::SwapChain::Instance->pDxSwapChain1;
-		printf("Swapchain: 0x%p\n", engine::SwapChain::Instance);
-		printf("Swapchain: 0x%p\n", pSwapChain);
 		DWORD64 myFunc = (DWORD64)hook_present;
 		DWORD64* engineInterface = (DWORD64*)*(DWORD64*)pSwapChain;
 
