@@ -102,6 +102,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST move_input = Memory::GetCallAddress("E8 ? ? ? ? 4C 8B 47 18");
+				DWORD64 CONST has_same_team = Memory::GetCallAddress("E8 ? ? ? ? 80 7E 07 00");
 			}
 		}
 
@@ -118,6 +119,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST can_attack = Memory::SigScan("48 89 5C 24 ? 80 3D ? ? ? ? ? 44 0F B6 DA");
+				DWORD64 CONST set_as_ally = Memory::GetCallAddress("E8 ? ? ? ? 45 33 E4 44 89 65 10");
 			}
 		}
 
@@ -129,6 +131,8 @@ namespace engine
 				DWORD64 CONST tostring = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F0 48 8B 03 4C 8B 80");
 				DWORD64 CONST can_fire = Memory::GetCallAddress("E8 ? ? ? ? 84 C0 74 39 8B 4B 30");
 				DWORD64 CONST post_fire = Memory::GetCallAddress("E8 ? ? ? ? 48 8B B7 ? ? ? ? 48 85 F6 74 7A");
+				DWORD64 CONST create_hash = Memory::GetCallAddress("E8 ? ? ? ? 48 8B D8 48 85 C0 74 36 45 33 C0");
+				DWORD64 CONST create_data = Memory::GetCallAddress("E8 ? ? ? ? 48 8B D8 48 85 C0 74 36 45 33 C0");
 			}
 		}
 
@@ -187,6 +191,14 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST draw = Memory::SigScan("48 8B C4 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 48 C7 44 24 ? ? ? ? ? 48 89 58 18 0F 29 70 B8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 0F 28 F1 4C 8B F1");
+			}
+		}
+
+		namespace gamedatamanager
+		{
+			namespace functions
+			{
+				DWORD64 CONST get_weapon_data = Memory::GetCallAddress("E8 ? ? ? ? 48 85 C0 74 15 48 8B D7");
 			}
 		}
 	}

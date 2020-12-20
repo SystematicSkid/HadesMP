@@ -33,6 +33,11 @@ namespace engine::hades
 		{
 			return static_cast<bool(__fastcall*)(UnitStatus*, bool)>((PVOID)engine::addresses::unitstatus::functions::can_attack)(this, can_cancel_disables);
 		}
+
+		void SetAsAlly()
+		{
+			return static_cast<void(__fastcall*)(UnitStatus*)>((PVOID)engine::addresses::unitstatus::functions::set_as_ally)(this);
+		}
 	};
 
 	// Note: This is a placeholder, this should be replaced by ACTUAL inheritance to the `Thing` class.

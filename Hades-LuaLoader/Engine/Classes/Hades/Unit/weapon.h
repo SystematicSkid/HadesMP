@@ -348,6 +348,18 @@ namespace engine::hades
 		{
 			return static_cast<void(__fastcall*)(Weapon*)>((PVOID)engine::addresses::weapon::functions::post_fire)(this);
 		}
+
+		static Weapon* Create(engine::misc::HashGuid name, engine::hades::Unit* owner)
+		{
+			return static_cast<Weapon * (__fastcall*)(engine::misc::HashGuid, engine::hades::Unit*)>((PVOID)engine::addresses::weapon::functions::create_hash)
+				(name, owner);
+		}
+
+		static Weapon* Create(WeaponData* data, engine::hades::Unit* owner)
+		{
+			return static_cast<Weapon * (__fastcall*)(WeaponData*, engine::hades::Unit*)>((PVOID)engine::addresses::weapon::functions::create_data)
+				(data, owner);
+		}
 	};
 
 	struct WeaponArsenal
