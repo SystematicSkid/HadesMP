@@ -28,7 +28,6 @@ namespace core::hooks::directx
 
 		if (engineInterface[0x16] != myFunc)
 		{
-			printf("Func: 0x%p\n", engineInterface[0x16]);
 			//Allocate some memory for our copy of the interface (vtable)
 			static DWORD64 myEngineInterface[208 + 150];
 

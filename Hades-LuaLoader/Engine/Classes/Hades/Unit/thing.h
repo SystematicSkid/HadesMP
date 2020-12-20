@@ -196,6 +196,8 @@ namespace engine::hades
 		engine::misc::HashGuid mName;
 
 	public:
+		// Game Functions
+
 		void MoveInput(D3DXVECTOR2* location, float speed_fraction, bool strafe, float elapsed_seconds)
 		{
 			return static_cast<void(__fastcall*)(Thing*, D3DXVECTOR2*, float, bool, float)>((PVOID)engine::addresses::unit::functions::move_input)
@@ -217,6 +219,39 @@ namespace engine::hades
 		{
 			return static_cast<Animation * (__fastcall*)(Thing*, engine::misc::HashGuid, bool, bool)>
 				((PVOID)engine::addresses::thing::functions::set_animation)(this, name, suppress_sounds, suppress_sounds_if_invisible);
+		}
+
+		bool IsAlive()
+		{
+
+			return this->mLifeStatus[0] == 0;
+		}
+
+		// Must be called in correct function
+		void DrawHightlight(engine::misc::Color col)
+		{
+			return static_cast<void(__fastcall*)(Thing*, engine::misc::Color)>((PVOID)engine::addresses::thing::functions::draw_highlight)(this, col);
+		}
+
+		// Helper functions
+
+		float Distance(Thing* other)
+		{
+			auto delta = this->location - other->location;
+			return sqrt(delta.x * delta.x + delta.y * delta.y);
+		}
+
+		float Distance(D3DXVECTOR2 pos)
+		{
+			auto delta = this->location - pos;
+			return sqrt(delta.x * delta.x + delta.y * delta.y);
+		}
+
+		float GetAngle(Thing* other)
+		{
+			float angle = atan2f((float)(other->location.y - this->location.y) * -1.f, other->location.x - this->location.x);
+			float result = floorf(angle / (6.2831855f)); // 2PI
+			return angle - (float)(result * (6.2831855f));
 		}
 	};
 

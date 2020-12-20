@@ -73,6 +73,11 @@ namespace engine::hades
 				this->arsenal.AddWeapon(weapon);
 
 		}
+
+		void DrawExtents()
+		{
+			return static_cast<void(__fastcall*)(Unit*)>((PVOID)engine::addresses::unit::functions::draw_extends)(this);
+		}
 	};
 
 	

@@ -95,6 +95,7 @@ namespace engine
 			{
 				DWORD64 CONST get_parallax_amount = Memory::GetCallAddress("E8 ? ? ? ? F3 44 0F 58 C0");
 				DWORD64 CONST set_animation = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 47 68");
+				DWORD64 CONST draw_highlight = Memory::GetCallAddress("E8 ? ? ? ? EB 22 C6 44 24");
 			}
 		}
 
@@ -104,6 +105,7 @@ namespace engine
 			{
 				DWORD64 CONST move_input = Memory::GetCallAddress("E8 ? ? ? ? 4C 8B 47 18");
 				DWORD64 CONST has_same_team = Memory::GetCallAddress("E8 ? ? ? ? 80 7E 07 00");
+				DWORD64 CONST draw_extends = Memory::GetInstanceAddress("40 55 53 48 8D 6C 24");
 			}
 		}
 
