@@ -2,8 +2,6 @@
 
 namespace engine::hades
 {
-	
-
 	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;

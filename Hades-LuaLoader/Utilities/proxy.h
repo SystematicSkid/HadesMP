@@ -101,7 +101,7 @@ private:
 		return set_call(orig, 108)(dwUserIndex);
 	}
 public:
-	bool Init()
+	bool initialize()
 	{
 		char path[MAX_PATH];;
 		GetSystemDirectoryA(path, MAX_PATH);
