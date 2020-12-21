@@ -42,8 +42,8 @@ namespace engine::hades
 
 		bool AddOutline(engine::hades::Thing* thing, engine::misc::Color col, float opacity, float thickness, float threshold, float duration, bool overlay, bool all_anims)
 		{
-			return static_cast<bool(__fastcall*)(engine::hades::Thing*, engine::misc::Color, float, float, float, float, bool, bool)>((PVOID)engine::addresses::world::functions::add_outline)
-				(thing, col, opacity, thickness, threshold, duration, overlay, all_anims);
+			return static_cast<bool(__fastcall*)(World*,engine::hades::Thing*, engine::misc::Color, float, float, float, float, bool, bool)>((PVOID)engine::addresses::world::functions::add_outline)
+				(this, thing, col, opacity, thickness, threshold, duration, overlay, all_anims);
 		}
 	};
 

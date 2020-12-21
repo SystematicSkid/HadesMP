@@ -2,15 +2,18 @@
 
 namespace engine::misc
 {
-	struct Color
+	union Color
 	{
 		// Fields
 		unsigned int v = -1;
-		char r;
-		char g;
-		char b;
-		char a;
-
+		struct  
+		{
+			char r;
+			char g;
+			char b;
+			char a;
+		};
+	
 		// Constructors
 
 		// Default white
