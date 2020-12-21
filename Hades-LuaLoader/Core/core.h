@@ -45,6 +45,7 @@ namespace core
 {
 	// Variables 
 	std::once_flag init_flag;
+	std::once_flag network_init_flag;
 	ID3D11DeviceContext* pContext;
 	ID3D11Device* pDevice;
 	font text;
@@ -112,6 +113,12 @@ namespace core
 		/* Create our `OnUpdate` callback */
 		core::hooks::on_update = [=](engine::App* app, float dt)
 		{
+			/* Initialize our network once */
+			std::call_once(network_init_flag, [=]()
+				{
+					/* Initialize all here */
+				});
+
 			auto player_manager = engine::hades::PlayerManager::Instance();
 			auto controllable_unit = player_manager->players[0]->active_unit;
 
