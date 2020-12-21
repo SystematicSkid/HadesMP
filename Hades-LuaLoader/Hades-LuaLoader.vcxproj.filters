@@ -191,5 +191,8 @@
     <ClInclude Include="Core\Renderer\renderer.h">
       <Filter>Header Files\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Enums\moveai.h">
+      <Filter>Header Files\Engine\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,7 +4,11 @@
 namespace engine::hades
 {
 
-	
+	struct UnitAI
+	{
+		engine::hades::MoveAI* pActiveMoveAI;
+		class Unit* pOwner;
+	};
 
 	struct UnitStatus
 	{
@@ -40,12 +44,40 @@ namespace engine::hades
 		}
 	};
 
-	// Note: This is a placeholder, this should be replaced by ACTUAL inheritance to the `Thing` class.
-	class Unit
+	class Unit : public Thing
 	{
 	private:
-		char pad[0x3F8];
+		// Virtuals
+		virtual void unk12() = 0;
+		virtual void unk13() = 0;
+		virtual void StopMoving() = 0;
 	public:
+		engine::hades::Player* pPlayer;
+		bool mAllowInput;
+		bool mWasTraitor;
+		bool mIsMoving;
+		bool mIsMovingTo;
+		bool mHasActivated;
+		bool mAllowAnyFire;
+		bool padding0;
+		char mNumThingsTrailing;
+		engine::hades::UnitData* pData;
+		int mSpawnedBy;
+		float mUnappliedSpeed;
+		float mCosmeticAngle;
+		float mCosmeticAngleTarget;
+		float mSpeedFraction;
+		float mSpeedModifier;
+		float mSpeedAddition;
+		float mPrevSpeedFraction;
+		float mGoalAngle;
+		float mDamageOutputModifier;
+		D3DXVECTOR2 mTetherLocation;
+		D3DXVECTOR2 mRectangleError;
+		D3DXVECTOR2 mPrevLocation;
+		D3DXVECTOR2 mLastMoveStartLocation;
+		D3DXVECTOR2 mLastCollisionTranslation;
+		engine::hades::UnitAI mAI;
 		WeaponArsenal arsenal;
 		UnitStatus status;
 		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mPrevColliding;

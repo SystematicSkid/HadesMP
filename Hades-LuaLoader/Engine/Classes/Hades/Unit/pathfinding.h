@@ -40,6 +40,28 @@ namespace engine::hades
 		BYTE mOnFailBehavior[1];
 	};
 
+	class MoveAI
+	{
+	private:
+		virtual void destructor(unsigned int) = 0;
+		virtual void Update(float) = 0;
+		virtual void DebugDraw() = 0;
+		virtual engine::hades::MoveAI_Result FindPath(engine::hades::Unit*, float) = 0;
+		virtual void SetTarget(D3DXVECTOR2, engine::hades::Thing*) = 0;
+		virtual void OnDestinationInvalid() = 0;
+
+	public:
+		engine::hades::Target mMoveTarget;
+		int mLiveOffsetFromId;
+		float mLiveOffsetDistance;
+		float mLiveOffsetAngle;
+		std::vector<int> mTrackThings;
+		D3DXVECTOR2 mTrackOffset;
+		BYTE mCurrentState[1];
+		engine::hades::Unit* pOwner;
+		MoveAIData mData;
+	};
+
 	struct __declspec(align(4)) PathfinderNode
 	{
 		D3DXVECTOR2 mPosition;
