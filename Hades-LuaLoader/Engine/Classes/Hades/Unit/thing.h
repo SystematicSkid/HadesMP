@@ -132,6 +132,49 @@ namespace engine::hades
 	class Thing : public RenderComponent
 	{
 	public:
+		// Virtual functions
+		virtual bool IsDone() = 0;
+		virtual bool ShouldDraw() = 0;
+		virtual void DrawExtents() = 0;
+		virtual void UpdateAnimation(float) = 0;
+		virtual void OnUpwardForce(float) = 0;
+		virtual void OnTouchdown(float, float) = 0;
+		virtual D3DXVECTOR2* GetDrawLocation(D3DXVECTOR2*, D3DXVECTOR2*, float) = 0;
+		virtual bool IsOnCamera() = 0;
+		virtual void MarkSortScoreChanged() = 0;
+		virtual void ShiftZLocation(float, bool) = 0;
+		virtual void SetLocation(D3DXVECTOR2*, bool) = 0;
+		virtual engine::misc::HashGuid* GetName(engine::misc::HashGuid*) = 0;
+		virtual void SetAngle(float) = 0;
+		virtual void SetAttachOffset(D3DXVECTOR2*) = 0;
+		virtual engine::misc::IRectangle* GetArea(engine::misc::IRectangle*) = 0;
+		virtual void unk5() = 0;
+		virtual void unk6() = 0;
+		virtual void unk7() = 0;
+		virtual void Destroy() = 0;
+		virtual void Delete() = 0;
+		virtual bool IsAlive() = 0;
+		virtual void OnAnimationAttached(engine::hades::Animation* anim) = 0;
+		virtual void unk8() = 0;
+		virtual void RunScriptAction() = 0; // Not fully reversed yet! Don't use.
+		virtual void TeleportTo(D3DXVECTOR2*, bool, bool) = 0;
+		virtual void unk9() = 0;
+		virtual void unk10() = 0;
+		virtual void AttachTo(Thing*, D3DXVECTOR2*) = 0;
+		virtual void Detach() = 0;
+		virtual void OnPropertiesDirty() = 0;
+		virtual char* ToString() = 0;
+		virtual void OnAnimationRemoved(engine::hades::Animation*) = 0;
+		virtual void HotLoad(const char*) = 0;
+		virtual float GetSpeed(float) = 0;
+		virtual void Dispose(bool) = 0;
+		virtual void unk11() = 0;
+		virtual engine::misc::IRectangle* GetDrawBoundsInternal(engine::misc::IRectangle*) = 0;
+		virtual void FirstInit() = 0;
+		virtual void Defaults() = 0;
+		virtual void Obstacle_Init() = 0;
+		virtual void OnSortScoreUpdated() = 0;
+	public:
 		bool mVisible;
 		bool mAnimFreeze;
 		bool mSuppressSounds;
@@ -209,7 +252,7 @@ namespace engine::hades
 			return static_cast<float(__fastcall*)(Thing*)>((PVOID)engine::addresses::thing::functions::get_parallax_amount)(this);
 		}
 
-		engine::misc::HashGuid* GetName(engine::misc::HashGuid* result)
+		engine::misc::HashGuid* GetName_Internal(engine::misc::HashGuid* result)
 		{
 			PVOID* vtbl = *(PVOID**)this;
 			return static_cast<engine::misc::HashGuid * (__fastcall*)(Thing*, engine::misc::HashGuid*)>(vtbl[17])(this, result);
@@ -221,7 +264,7 @@ namespace engine::hades
 				((PVOID)engine::addresses::thing::functions::set_animation)(this, name, suppress_sounds, suppress_sounds_if_invisible);
 		}
 
-		bool IsAlive()
+		bool IsAlive_Internal()
 		{
 
 			return this->mLifeStatus[0] == 0;
