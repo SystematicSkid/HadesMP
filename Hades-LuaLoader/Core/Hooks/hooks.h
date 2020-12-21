@@ -1,6 +1,7 @@
 #pragma once
 #include "./directx.h"
 #include <minhook/include/MinHook.h>
+#include <any>
 
 /*
 	This entire file is pretty ugly simply because
@@ -129,6 +130,34 @@ namespace core::hooks
 		return static_cast<bool(__fastcall*)(engine::hades::Thing*, engine::hades::Thing*)>(original_check_team)(thisptr, other);
 	}
 
+	PVOID original_set_effect = nullptr;
+	void __fastcall hook_set_effect(engine::hades::Weapon* weapon, const char* effect_name, const char* property_name, std::any* val, engine::Reflection_ValueChangeType change_type)
+	{
+		if (weapon && weapon->pData)
+		{
+			printf("weapon: %s\n", weapon->pData->name.ToString());
+			printf("Effect: %s:%s\n", effect_name, property_name);
+			printf("Type: 0x%p\n\n", change_type);
+			printf("Val: 0x%p\n", *val);
+		}
+		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, const char*, std::any*, engine::Reflection_ValueChangeType)>(original_set_effect)
+			(weapon, effect_name, property_name, val, change_type);
+	}
+
+	PVOID original_set_data = nullptr;
+	void __fastcall hook_set_data(engine::hades::Weapon* weapon, const char* name, std::any* val, int change_type)
+	{
+		if (weapon && weapon->pData)
+		{
+			printf("Weapon: %s\n", weapon->pData->name.ToString());
+			printf("Property: %s\n", name);
+			printf("Type: 0x%p\n", change_type);
+			printf("Val: 0x%p\n", *val);
+		}
+		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, std::any*, int)>(original_set_data)(weapon, name, val, change_type);
+	}
+
+
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
 	{
 		uint8_t shell[] =
@@ -172,8 +201,8 @@ namespace core::hooks
 		printf("Original: 0x%p\n", original_update);
 
 		MH_Initialize();
-		MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit, &hook_create_player_unit, &original_create_player);
-		MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit);
+		//MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit, &hook_create_player_unit, &original_create_player);
+		//MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit);
 
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::request_fire, &hook_request_fire, &original_request_fire);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::request_fire);
@@ -183,7 +212,12 @@ namespace core::hooks
 
 		MH_CreateHook((PVOID)engine::addresses::gameplayscreen::functions::draw, &hook_gameplayscreen_draw, &original_draw);
 		MH_EnableHook((PVOID)engine::addresses::gameplayscreen::functions::draw);
+		
+		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_effect_property, &hook_set_effect, &original_set_effect);
+		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_effect_property);
 
+		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_data_property, &hook_set_data, &original_set_data);
+		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_data_property);
 		//MH_CreateHook((PVOID)engine::addresses::unit::functions::has_same_team, &hook_has_same_team, &original_check_team);
 		//MH_EnableHook((PVOID)engine::addresses::unit::functions::has_same_team);
 		// Script load hook

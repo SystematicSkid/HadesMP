@@ -137,6 +137,8 @@ namespace engine
 				DWORD64 CONST post_fire = Memory::GetCallAddress("E8 ? ? ? ? 48 8B B7 ? ? ? ? 48 85 F6 74 7A");
 				DWORD64 CONST create_hash = Memory::GetCallAddress("E8 ? ? ? ? 48 8B D8 48 85 C0 74 36 45 33 C0");
 				DWORD64 CONST create_data = Memory::GetCallAddress("E8 ? ? ? ? 48 8B D8 48 85 C0 74 36 45 33 C0");
+				DWORD64 CONST set_effect_property = Memory::SigScan("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 83 EC 30 48 8B 81");
+				DWORD64 CONST set_data_property = Memory::GetCallAddress("E8 ? ? ? ? EB 50 C7 45");
 			}
 		}
 

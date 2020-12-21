@@ -191,6 +191,7 @@
     <ClInclude Include="Engine\Enums\filesystem.h" />
     <ClInclude Include="Engine\Enums\map.h" />
     <ClInclude Include="Engine\Enums\moveai.h" />
+    <ClInclude Include="Engine\Enums\reflection.h" />
     <ClInclude Include="Engine\Enums\rtti.h" />
     <ClInclude Include="Utilities\memory.h" />
     <ClInclude Include="Utilities\proxy.h" />

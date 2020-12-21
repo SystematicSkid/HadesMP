@@ -38,6 +38,7 @@
 #include "./Enums/map.h"
 #include "./Enums/rtti.h"
 #include "./Enums/moveai.h"
+#include "./Enums/reflection.h"
 
 /* Utility Classes */
 #include "./Classes/Misc/rectangle.h"
