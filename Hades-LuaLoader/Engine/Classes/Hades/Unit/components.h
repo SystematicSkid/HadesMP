@@ -30,6 +30,7 @@ namespace engine::hades
 
 	class LifeComponent : IThingComponent
 	{
+	public:
 		bool mTargetable;
 		bool mIsInvulnerable;
 		bool mIsPlayerControlled;

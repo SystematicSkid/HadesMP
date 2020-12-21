@@ -96,6 +96,7 @@ namespace engine
 				DWORD64 CONST get_parallax_amount = Memory::GetCallAddress("E8 ? ? ? ? F3 44 0F 58 C0");
 				DWORD64 CONST set_animation = Memory::GetCallAddress("E8 ? ? ? ? 48 8B 47 68");
 				DWORD64 CONST draw_highlight = Memory::GetCallAddress("E8 ? ? ? ? EB 22 C6 44 24");
+				DWORD64 CONST is_targetable = Memory::GetCallAddress("E8 ? ? ? ? 84 C0 0F 84 ? ? ? ? 48 8B 87 ? ? ? ? 48 85 C0");
 			}
 		}
 

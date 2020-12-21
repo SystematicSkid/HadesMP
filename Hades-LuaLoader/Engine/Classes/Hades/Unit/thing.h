@@ -164,7 +164,7 @@ namespace engine::hades
 		DWORD64 pMetering;
 		DWORD64 pSpeech;
 		DWORD64 pInteraction;
-		DWORD64 pAnim;
+		AnimationData* pAnim;
 		EntityLinkedObjectThing mAttachedTo;
 		LuaTable mAttachedLua;
 		std::vector<int> mGridSquares;
@@ -231,6 +231,21 @@ namespace engine::hades
 		void DrawHightlight(engine::misc::Color col)
 		{
 			return static_cast<void(__fastcall*)(Thing*, engine::misc::Color)>((PVOID)engine::addresses::thing::functions::draw_highlight)(this, col);
+		}
+
+		bool IsInvulnerable()
+		{
+			if (!this->pAnim || !this->pAnim->mDef.mOwnerInvulnerable)
+			{
+				if (!this->pLife || !this->pLife->mIsInvulnerable)
+					return false;
+			}
+			return true;
+		}
+
+		bool IsTargetable()
+		{
+			return static_cast<bool(__fastcall*)(Thing*)>((PVOID)engine::addresses::thing::functions::is_targetable)(this);
 		}
 
 		// Helper functions
