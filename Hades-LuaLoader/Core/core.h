@@ -156,7 +156,7 @@ namespace core
 				global::replicated_unit->mAttachedLua.ref = controllable_unit->mAttachedLua.ref;
 			}
 
-			if (global::replicated_unit)
+			/*if (global::replicated_unit)
 			{
 				if (player_manager)
 				{
@@ -218,13 +218,14 @@ namespace core
 								auto angle = global::replicated_unit->GetAngle(target);
 								special->RequestFire(angle, target->location, target);
 							}
-							//engine::hades::PathFinder::CalcPath(global::replicated_unit, target_location, player_unit, 10.f /*Success Dist*/);
+							//engine::hades::PathFinder::CalcPath(global::replicated_unit, target_location, player_unit, 10.f / *Success Dist* /);
 							//input->pPlayerPathfinding->GetNextPathStep(&move_location, target_location);
 							global::replicated_unit->MoveInput(&target->location, 1.0, false, dt);
 						}
 					}
 				}
 			}
+*/
 
 			if (global::replicated_unit && controllable_unit)
 			{
