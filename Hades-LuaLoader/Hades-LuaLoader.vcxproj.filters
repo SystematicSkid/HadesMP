@@ -170,9 +170,6 @@
     <ClInclude Include="Core\Network\defines.h">
       <Filter>Header Files\Core\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Network\serialization.h">
-      <Filter>Header Files\Core\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Network\server.h">
       <Filter>Header Files\Core\Network</Filter>
     </ClInclude>

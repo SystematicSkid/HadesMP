@@ -42,7 +42,7 @@
 
 #define ENET_VERSION_MAJOR 2
 #define ENET_VERSION_MINOR 2
-#define ENET_VERSION_PATCH 1
+#define ENET_VERSION_PATCH 0
 #define ENET_VERSION_CREATE(major, minor, patch) (((major)<<16) | ((minor)<<8) | (patch))
 #define ENET_VERSION_GET_MAJOR(version) (((version)>>16)&0xFF)
 #define ENET_VERSION_GET_MINOR(version) (((version)>>8)&0xFF)
@@ -222,21 +222,15 @@ extern "C" {
     typedef uint64_t enet_uint64;   /**< unsigned 64-bit type */
 
     typedef enet_uint32 ENetVersion;
-    typedef struct _ENetPacket ENetPacket;
 
     typedef struct _ENetCallbacks {
         void* (ENET_CALLBACK* malloc) (size_t size);
         void (ENET_CALLBACK* free) (void* memory);
         void (ENET_CALLBACK* no_memory) (void);
-
-        ENetPacket* (ENET_CALLBACK* packet_create)        (const void* data, size_t dataLength, enet_uint32 flags);
-        void        (ENET_CALLBACK* packet_destroy)       (ENetPacket* packet);
     } ENetCallbacks;
 
     extern void* enet_malloc(size_t);
     extern void enet_free(void*);
-    extern ENetPacket* enet_packet_create(const void*, size_t, enet_uint32);
-    extern void enet_packet_destroy(ENetPacket*);
 
     // =======================================================================//
     // !
@@ -943,7 +937,9 @@ extern "C" {
     ENET_API enet_uint32 enet_packet_get_length(ENetPacket*);
     ENET_API void        enet_packet_set_free_callback(ENetPacket*, void*);
 
+    ENET_API ENetPacket* enet_packet_create(const void*, size_t, enet_uint32);
     ENET_API ENetPacket* enet_packet_create_offset(const void*, size_t, size_t, enet_uint32);
+    ENET_API void         enet_packet_destroy(ENetPacket*);
     ENET_API enet_uint32  enet_crc32(const ENetBuffer*, size_t);
 
     ENET_API ENetHost* enet_host_create(const ENetAddress*, size_t, size_t, enet_uint32, enet_uint32);
@@ -1204,7 +1200,7 @@ extern "C" {
    // !
    // =======================================================================//
 
-    static ENetCallbacks callbacks = { malloc, free, abort, enet_packet_create, enet_packet_destroy };
+    static ENetCallbacks callbacks = { malloc, free, abort };
 
     int enet_initialize_with_callbacks(ENetVersion version, const ENetCallbacks* inits) {
         if (version < ENET_VERSION_CREATE(1, 3, 0)) {
@@ -1222,15 +1218,6 @@ extern "C" {
 
         if (inits->no_memory != NULL) {
             callbacks.no_memory = inits->no_memory;
-        }
-
-        if (inits->packet_create != NULL || inits->packet_destroy != NULL) {
-            if (inits->packet_create == NULL || inits->packet_destroy == NULL) {
-                return -1;
-            }
-
-            callbacks.packet_create = inits->packet_create;
-            callbacks.packet_destroy = inits->packet_destroy;
         }
 
         return enet_initialize();
@@ -1636,7 +1623,7 @@ extern "C" {
 
                 if (outgoingCommand->packet->referenceCount == 0) {
                     outgoingCommand->packet->flags |= ENET_PACKET_FLAG_SENT;
-                    callbacks.packet_destroy(outgoingCommand->packet);
+                    enet_packet_destroy(outgoingCommand->packet);
                 }
             }
 
@@ -1708,7 +1695,7 @@ extern "C" {
 
             if (outgoingCommand->packet->referenceCount == 0) {
                 outgoingCommand->packet->flags |= ENET_PACKET_FLAG_SENT;
-                callbacks.packet_destroy(outgoingCommand->packet);
+                enet_packet_destroy(outgoingCommand->packet);
             }
         }
 
@@ -2810,7 +2797,7 @@ extern "C" {
                         --outgoingCommand->packet->referenceCount;
 
                         if (outgoingCommand->packet->referenceCount == 0) {
-                            callbacks.packet_destroy(outgoingCommand->packet);
+                            enet_packet_destroy(outgoingCommand->packet);
                         }
 
                         enet_list_remove(&outgoingCommand->outgoingCommandList);
@@ -3663,7 +3650,7 @@ extern "C" {
                 --outgoingCommand->packet->referenceCount;
 
                 if (outgoingCommand->packet->referenceCount == 0) {
-                    callbacks.packet_destroy(outgoingCommand->packet);
+                    enet_packet_destroy(outgoingCommand->packet);
                 }
             }
 
@@ -3686,7 +3673,7 @@ extern "C" {
                 --incomingCommand->packet->referenceCount;
 
                 if (incomingCommand->packet->referenceCount == 0) {
-                    callbacks.packet_destroy(incomingCommand->packet);
+                    enet_packet_destroy(incomingCommand->packet);
                 }
             }
 
@@ -4298,7 +4285,7 @@ extern "C" {
             goto notifyError;
         }
 
-        packet = callbacks.packet_create(data, dataLength, flags);
+        packet = enet_packet_create(data, dataLength, flags);
         if (packet == NULL) {
             goto notifyError;
         }
@@ -4356,14 +4343,14 @@ extern "C" {
         }
 
         if (packet != NULL && packet->referenceCount == 0) {
-            callbacks.packet_destroy(packet);
+            enet_packet_destroy(packet);
         }
 
         return &dummyCommand;
 
     notifyError:
         if (packet != NULL && packet->referenceCount == 0) {
-            callbacks.packet_destroy(packet);
+            enet_packet_destroy(packet);
         }
 
         return NULL;
@@ -4626,7 +4613,7 @@ extern "C" {
         }
 
         if (packet->referenceCount == 0) {
-            callbacks.packet_destroy(packet);
+            enet_packet_destroy(packet);
         }
     }
 

@@ -18,6 +18,7 @@ namespace core::hooks
 
 	void __fastcall hook_update(engine::App* app, float elapsed_seconds)
 	{
+
 		if (on_update)
 			on_update(app, elapsed_seconds);
 		return static_cast<void(__fastcall*)(engine::App*, float)>(original_update)(app, elapsed_seconds);

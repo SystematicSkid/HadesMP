@@ -1,5 +1,5 @@
 #pragma once
-#include <enet/include/enet.h>
+#include <cista/include/cista.h>
 
 namespace core::network
 {
@@ -36,6 +36,17 @@ namespace core::network
 
 	namespace packet
 	{
+		struct anime
+		{
+			struct position
+			{
+				float x;
+				float y;
+			} pos;
+
+			cista::raw::string msg;
+		};
+
 		struct ServerUpdateOnTick
 		{
 			int time;

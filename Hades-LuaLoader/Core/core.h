@@ -26,6 +26,7 @@
 #include <functional>
 #include <cassert>
 #include <mutex>
+#include <thread>
 
 /* Engine Access */
 #include "../Engine/engine.h"
@@ -34,6 +35,8 @@
 #include "../Utilities/memory.h"
 #include "../Utilities/proxy.h"
 
+#include "Network/server.h"
+#include "Network/client.h"
 
 /* Hooks */
 #include "./Hooks/hooks.h"
@@ -117,6 +120,8 @@ namespace core
 			std::call_once(network_init_flag, [=]()
 				{
 					/* Initialize all here */
+					auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
+					client->join();
 				});
 
 			auto player_manager = engine::hades::PlayerManager::Instance();
