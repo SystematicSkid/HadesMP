@@ -68,7 +68,8 @@ namespace core::network::client
 					std::vector<uint8_t> serialized_data(&data[0], &data[data_size]);
 					auto deserialized_data = cista::deserialize<core::network::packet::anime>(serialized_data);
 					D3DXVECTOR2 pos = D3DXVECTOR2(deserialized_data->pos.x, deserialized_data->pos.y);
-					global::replicated_unit->MoveInput(&pos, 1.0f, false, global::delta_time);
+					if(global::replicated_unit->Distance(pos) > 10.f)
+						global::replicated_unit->MoveInput(&pos, 1.0f, false, global::delta_time);
 				};
 
 				client.consume_events(
