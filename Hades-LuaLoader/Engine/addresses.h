@@ -208,5 +208,13 @@ namespace engine
 				DWORD64 CONST get_weapon_data = Memory::GetCallAddress("E8 ? ? ? ? 48 85 C0 74 15 48 8B D7");
 			}
 		}
+
+		namespace groupmanager
+		{
+			namespace functions
+			{
+				DWORD64 CONST get_groupid = Memory::SigScan("44 8B 0A 45 85 C9");
+			}
+		}
 	}
 }

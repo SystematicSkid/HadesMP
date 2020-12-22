@@ -17,5 +17,13 @@ namespace engine::misc
 		{
 			return static_cast<unsigned int(__fastcall*)(const char*)>((PVOID)engine::addresses::hash::functions::string_intern)(s);
 		}
+
+		// Constructors
+		HashGuid() : id(0) {}
+
+		HashGuid(const char* s)
+		{
+			this->id = StringIntern(s);
+		}
 	};
 }

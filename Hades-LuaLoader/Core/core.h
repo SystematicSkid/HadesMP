@@ -59,8 +59,8 @@ namespace core
 
 	void proxy_thread()
 	{
-		auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
-		client->join();
+		//auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
+		//client->join();
 	}
 
 	bool initialize()
@@ -251,6 +251,22 @@ namespace core
 					unit_type->CopyArsenal((engine::hades::Unit*)controllable_unit);
 
 			};
+
+			if (engine::hades::World::Instance)
+			{
+				auto world = engine::hades::World::Instance;
+				auto group_manager = world->pGroupManager;
+				if (group_manager)
+				{
+					/*printf("Group manager: 0x%p\n", group_manager);
+					printf("Groups: 0x%p\n", &group_manager->mGroups);*/
+					auto enemy_team = group_manager->Get("EnemyTeam");
+					if (enemy_team)
+					{
+						printf("Enemy team: 0x%p\n", enemy_team);
+					}
+				}
+			}
 
 		};
 
