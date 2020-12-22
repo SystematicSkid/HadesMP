@@ -1,5 +1,5 @@
-#define WIN32_LEAN_AND_MEAN
 // win
+#include <WinSock2.h>
 #include <Windows.h>
 #include <winternl.h>
 #include <Xinput.h>

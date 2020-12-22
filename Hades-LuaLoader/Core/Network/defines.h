@@ -3,7 +3,7 @@
 
 namespace core::network
 {
-	enum ClientState
+	enum class ClientState
 	{
 		Connected,
 		Connecting,
@@ -13,7 +13,7 @@ namespace core::network
 		None
 	};
 
-	enum PlayerState
+	enum class PlayerState
 	{
 		Alive,
 		Dead,
