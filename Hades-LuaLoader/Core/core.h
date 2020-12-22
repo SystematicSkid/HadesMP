@@ -54,6 +54,12 @@ namespace core
 	font text;
 	font world_text;
 
+	void proxy_thread()
+	{
+		auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
+		client->join();
+	}
+
 	bool initialize()
 	{
 		/* Initialize our proxy system */
@@ -120,8 +126,9 @@ namespace core
 			std::call_once(network_init_flag, [=]()
 				{
 					/* Initialize all here */
-					auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
-					client->join();
+					printf("Creating thread...\n");
+					CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)proxy_thread, NULL, NULL, NULL);
+					printf("Finished creating thread!\n");
 				});
 
 			auto player_manager = engine::hades::PlayerManager::Instance();
