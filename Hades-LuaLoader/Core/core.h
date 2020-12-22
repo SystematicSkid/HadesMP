@@ -5,6 +5,7 @@
 #include <Xinput.h>
 #include <d3d11.h>
 #include <d3d9.h>
+#include <d3dx9.h>
 #include <D3DX10math.h>
 #include <minwindef.h>
 #include <winbase.h>
@@ -12,6 +13,8 @@
 #include <psapi.h>
 
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dx9.lib")
+#pragma comment(lib, "d3d9.lib")
 
 // stl
 #include <vector>

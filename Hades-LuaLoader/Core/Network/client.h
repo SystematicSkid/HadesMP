@@ -51,25 +51,31 @@ namespace core::network::client
 
 				static auto on_connected = [=]()
 				{
-					trace_handler("client_on_connected");
+					//trace_handler("client_on_connected");
 
 					//connected = true;
 				};
 
 				static auto on_disconnected = [=]()
 				{
-					trace_handler("client_on_disconnected");
+					//trace_handler("client_on_disconnected");
 				};
 
 				static auto on_data_received = [=](const enet_uint8* data, size_t data_size)
 				{
-					trace_handler("client_on_datarecv");
+					//trace_handler("client_on_datarecv");
+					auto player_manager = engine::hades::PlayerManager::Instance();
+					auto controllable_unit = player_manager->players[0]->active_unit;
+					if(global::replicated_unit && controllable_unit)
+					{
+						std::vector<uint8_t> serialized_data(&data[0], &data[data_size]);
+						auto deserialized_data = cista::deserialize<core::network::packet::anime>(serialized_data);
+						D3DXVECTOR2 pos = D3DXVECTOR2(deserialized_data->pos.x, deserialized_data->pos.y);
+						float dist = global::replicated_unit->Distance(pos);
 
-					std::vector<uint8_t> serialized_data(&data[0], &data[data_size]);
-					auto deserialized_data = cista::deserialize<core::network::packet::anime>(serialized_data);
-					D3DXVECTOR2 pos = D3DXVECTOR2(deserialized_data->pos.x, deserialized_data->pos.y);
-					if(global::replicated_unit->Distance(pos) > 10.f)
-						global::replicated_unit->MoveInput(&pos, 1.0f, false, global::delta_time);
+						if (dist > 10.f)
+							global::replicated_unit->MoveInput(&pos, 1.0f, false, global::delta_time);
+					}
 				};
 
 				client.consume_events(
