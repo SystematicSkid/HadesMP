@@ -46,6 +46,7 @@
 #include "./Classes/Misc/soundcue.h"
 #include "./Classes/Misc/color.h"
 #include "./Classes/Misc/bounds.h"
+#include "./Classes/Misc/handle.h"
 
 /* Classes */
 #include "./Classes/rtti.h"

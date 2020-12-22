@@ -30,6 +30,19 @@ namespace engine::hades
 		float mSpeedModifierDuration;
 		float SessionWorldTime;
 		engine::misc::Color mLoadBackgroundColor;
+		DWORD64* pSortScoreSystem;
+		DWORD64* pOutlineSystem;
+		DWORD64* pWorkerManager;
+		DWORD64* pGroupManager;
+		engine::hades::UnitManager* pUnitManager;
+		DWORD64* pObstacleManager;
+		DWORD64* pProjectileManager;
+		engine::misc::Handle mPreDrawWorkHandle;
+		engine::hades::Map mMap;
+		std::string mNextMap;
+		std::vector<engine::hades::MapThing*> mMapThingsToDelete;
+		std::vector<engine::hades::Thing*> mToClear;
+		std::vector<engine::hades::MapThing*> mMissing;
 
 		// TODO: Finish adding fields
 
