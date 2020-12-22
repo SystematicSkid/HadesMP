@@ -161,6 +161,7 @@
     <ClInclude Include="Engine\Classes\filestream.h" />
     <ClInclude Include="Engine\Classes\Hades\camera.h" />
     <ClInclude Include="Engine\Classes\Hades\gamedata.h" />
+    <ClInclude Include="Engine\Classes\Hades\groupmanager.h" />
     <ClInclude Include="Engine\Classes\Hades\player.h" />
     <ClInclude Include="Engine\Classes\Hades\playermanager.h" />
     <ClInclude Include="Engine\Classes\Hades\polygon.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Engine\Classes\lua.h" />
     <ClInclude Include="Engine\Classes\Misc\bounds.h" />
     <ClInclude Include="Engine\Classes\Misc\color.h" />
+    <ClInclude Include="Engine\Classes\Misc\handle.h" />
     <ClInclude Include="Engine\Classes\Misc\hash.h" />
     <ClInclude Include="Engine\Classes\Misc\rectangle.h" />
     <ClInclude Include="Engine\Classes\Misc\soundcue.h" />

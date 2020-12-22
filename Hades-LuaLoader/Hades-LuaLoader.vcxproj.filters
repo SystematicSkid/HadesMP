@@ -194,5 +194,11 @@
     <ClInclude Include="Engine\Enums\reflection.h">
       <Filter>Header Files\Engine\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\handle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\groupmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

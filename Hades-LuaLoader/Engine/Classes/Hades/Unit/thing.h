@@ -311,7 +311,6 @@ namespace engine::hades
 		}
 	};
 
-
 	struct MapThing
 	{
 		BYTE mDataType[1];

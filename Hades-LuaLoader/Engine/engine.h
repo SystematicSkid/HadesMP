@@ -72,14 +72,15 @@
 #include "./Classes/Hades/Unit/unit.h"
 #include "./Classes/Hades/Unit/playerunit.h"
 
-/* World Classes */
-#include "./Classes/Hades/World/map.h"
-#include "./Classes/Hades/World/world.h"
-
 #include "./Classes/Hades/camera.h"
 #include "./Classes/Hades/player.h"
 #include "./Classes/Hades/playermanager.h"
 #include "./Classes/Hades/unitmanager.h"
+#include "./Classes/Hades/groupmanager.h"
+
+/* World Classes */
+#include "./Classes/Hades/World/map.h"
+#include "./Classes/Hades/World/world.h"
 
 namespace global
 {

@@ -33,7 +33,7 @@ namespace engine::hades
 		DWORD64* pSortScoreSystem;
 		DWORD64* pOutlineSystem;
 		DWORD64* pWorkerManager;
-		DWORD64* pGroupManager;
+		engine::hades::GroupManager* pGroupManager;
 		engine::hades::UnitManager* pUnitManager;
 		DWORD64* pObstacleManager;
 		DWORD64* pProjectileManager;
