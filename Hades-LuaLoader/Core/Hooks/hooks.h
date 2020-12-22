@@ -18,7 +18,6 @@ namespace core::hooks
 
 	void __fastcall hook_update(engine::App* app, float elapsed_seconds)
 	{
-
 		if (on_update)
 			on_update(app, elapsed_seconds);
 		return static_cast<void(__fastcall*)(engine::App*, float)>(original_update)(app, elapsed_seconds);
@@ -134,6 +133,7 @@ namespace core::hooks
 	PVOID original_set_effect = nullptr;
 	void __fastcall hook_set_effect(engine::hades::Weapon* weapon, const char* effect_name, const char* property_name, std::any* val, engine::Reflection_ValueChangeType change_type)
 	{
+		printf("Replicated: 0x%p\n", global::replicated_unit);
 		if (weapon && weapon->pData)
 		{
 			printf("weapon: %s\n", weapon->pData->name.ToString());
@@ -148,6 +148,8 @@ namespace core::hooks
 	PVOID original_set_data = nullptr;
 	void __fastcall hook_set_data(engine::hades::Weapon* weapon, const char* name, std::any* val, int change_type)
 	{
+		printf("Replicated: 0x%p\n", global::replicated_unit);
+
 		if (weapon && weapon->pData)
 		{
 			printf("Weapon: %s\n", weapon->pData->name.ToString());
@@ -202,23 +204,24 @@ namespace core::hooks
 		printf("Original: 0x%p\n", original_update);
 
 		MH_Initialize();
-		//MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit, &hook_create_player_unit, &original_create_player);
-		//MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit);
+		MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit, &hook_create_player_unit, &original_create_player);
+		MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_player_unit);
 
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::request_fire, &hook_request_fire, &original_request_fire);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::request_fire);
-		
+
 		MH_CreateHook((PVOID)engine::addresses::world::functions::load_next_map, &hook_load_next_map, &original_load_next_map);
 		MH_EnableHook((PVOID)engine::addresses::world::functions::load_next_map);
 
 		MH_CreateHook((PVOID)engine::addresses::gameplayscreen::functions::draw, &hook_gameplayscreen_draw, &original_draw);
 		MH_EnableHook((PVOID)engine::addresses::gameplayscreen::functions::draw);
-		
+
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_effect_property, &hook_set_effect, &original_set_effect);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_effect_property);
 
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_data_property, &hook_set_data, &original_set_data);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_data_property);
+
 		//MH_CreateHook((PVOID)engine::addresses::unit::functions::has_same_team, &hook_has_same_team, &original_check_team);
 		//MH_EnableHook((PVOID)engine::addresses::unit::functions::has_same_team);
 		// Script load hook
