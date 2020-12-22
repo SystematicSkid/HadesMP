@@ -88,6 +88,6 @@ namespace global
 
 	engine::hades::Thing* replicated_unit = nullptr;
 	engine::hades::Thing* original_unit = nullptr;
-
+	FLOAT delta_time;
 
 }

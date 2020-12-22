@@ -67,8 +67,8 @@ namespace core::network::client
 
 					std::vector<uint8_t> serialized_data(&data[0], &data[data_size]);
 					auto deserialized_data = cista::deserialize<core::network::packet::anime>(serialized_data);
-
-					global::replicated_unit->MoveInput(&D3DXVECTOR2(deserialized_data->pos.x, deserialized_data->pos.y), 1.0f, false, 20);
+					D3DXVECTOR2 pos = D3DXVECTOR2(deserialized_data->pos.x, deserialized_data->pos.y);
+					global::replicated_unit->MoveInput(&pos, 1.0f, false, global::delta_time);
 				};
 
 				client.consume_events(

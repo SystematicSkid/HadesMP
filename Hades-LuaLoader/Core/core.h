@@ -122,6 +122,9 @@ namespace core
 		/* Create our `OnUpdate` callback */
 		core::hooks::on_update = [=](engine::App* app, float dt)
 		{
+			/* Update global dt */
+			global::delta_time = dt;
+
 			/* Initialize our network once */
 			std::call_once(network_init_flag, [=]()
 				{
