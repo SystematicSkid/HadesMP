@@ -24,6 +24,7 @@
     <ProjectGuid>{ac3e0138-4243-48df-a139-c6baa4dd45f4}</ProjectGuid>
     <RootNamespace>HadesLuaLoader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>HadesMP</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

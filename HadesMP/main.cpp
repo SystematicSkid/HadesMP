@@ -15,7 +15,7 @@ void init()
 	/* Initialize our output console */
 	/* TODO: Move this into a debug macro */
 	AllocConsole();
-	SetConsoleTitleA("Hades");
+	SetConsoleTitleA("HadesMP");
 	/* Assign `stdin`, `stout`, `stderr`  */
 	::freopen_s(&pNewStdin, "CONIN$", "r", stdin);
 	::freopen_s(&pNewStdout, "CONOUT$", "w", stdout);

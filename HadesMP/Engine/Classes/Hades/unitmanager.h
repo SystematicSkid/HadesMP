@@ -11,7 +11,6 @@ namespace engine::hades
 				((PVOID)engine::addresses::unitmanager::functions::create_player_unit)(data, location, map_thing, do_activate_presentation, needs_lua);
 		}
 
-		// Do not use, not working yet.
 		static eastl::hash_map<int, engine::hades::Thing*, eastl::hash<int>, eastl::equal_to<int>> GetUnitMap()
 		{
 			return (eastl::hash_map<int, engine::hades::Thing*, eastl::hash<int>, eastl::equal_to<int>>)((uintptr_t)engine::addresses::unitmanager::map_instance - 0x8);
