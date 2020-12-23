@@ -22,8 +22,10 @@ namespace engine::hades
 		float mAllegianceTime;
 		float mBlockEffectDuration;
 		engine::misc::HashGuid mBlockEffectId;
-		__declspec(align(8)) std::unordered_set<DWORD64, std::hash<DWORD64>, std::equal_to<DWORD64>> mToAdd;
-		std::unordered_set<DWORD64, std::hash<DWORD64>, std::equal_to<DWORD64>> mToDelete;
+		//__declspec(align(8)) std::unordered_set<DWORD64, std::hash<DWORD64>, std::equal_to<DWORD64>> mToAdd;
+		//std::unordered_set<DWORD64, std::hash<DWORD64>, std::equal_to<DWORD64>> mToDelete;
+		char pad[0x60];
+
 		std::vector<DWORD64> mEffects;
 		std::vector<engine::misc::HashGuid> mImmuneEffects;
 		class Unit* pOwner;
@@ -80,8 +82,9 @@ namespace engine::hades
 		engine::hades::UnitAI mAI;
 		WeaponArsenal arsenal;
 		UnitStatus status;
-		eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mPrevColliding;
-		eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mCurrentlyColliding;
+		//eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mPrevColliding;
+		//eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mCurrentlyColliding;
+		char pad[0x60];
 		// End
 
 	public:

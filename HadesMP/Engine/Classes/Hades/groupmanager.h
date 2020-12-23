@@ -21,7 +21,7 @@ namespace engine::hades
 		int mBlendMode;
 		MapThingGroupId mParentGroup;
 		std::vector<MapThingGroupId> mChildGroups;
-		eastl::hash_map<int, MapThing*, eastl::hash<int>, eastl::equal_to<int>> mThings;
+		//eastl::hash_map<int, MapThing*, eastl::hash<int>, eastl::equal_to<int>> mThings;
 		char pad[0x30];
 		int mNumThings;
 		int mNumThingsSelectable;
@@ -34,7 +34,8 @@ namespace engine::hades
 	class GroupManager
 	{
 	public:
-		eastl::hash_map < engine::hades::MapThingGroupId, int, eastl::hash<engine::hades::MapThingGroupId>, eastl::equal_to<>> mLookup;
+		//eastl::hash_map < engine::hades::MapThingGroupId, int, eastl::hash<engine::hades::MapThingGroupId>, eastl::equal_to<>> mLookup;
+		char pad[0x30];
 		std::vector<engine::hades::MapThingGroup> mWorking;
 		std::vector<engine::hades::MapThingGroup> mGroups;
 

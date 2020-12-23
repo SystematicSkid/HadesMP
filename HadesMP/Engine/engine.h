@@ -8,10 +8,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-/* EASTL */
-#include <EASTL/hash_map.h>
-#include <EASTL/hash_set.h>
-
 /* Windows */
 #include <Windows.h>
 #include <winternl.h>

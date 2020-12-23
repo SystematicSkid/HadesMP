@@ -331,7 +331,8 @@ namespace engine::hades
 
 	struct AnimationFrameDataSet
 	{
-		eastl::hash_map<engine::misc::HashGuid, AnimationFrameData, eastl::hash<engine::misc::HashGuid>, eastl::equal_to<engine::misc::HashGuid>> mDataPerMarker;
+		//eastl::hash_map<engine::misc::HashGuid, AnimationFrameData, eastl::hash<engine::misc::HashGuid>, eastl::equal_to<engine::misc::HashGuid>> mDataPerMarker;
+		char pad[0x30];
 	};
 
 	struct __declspec(align(8)) AnimationData : public engine::hades::GameData
@@ -339,8 +340,9 @@ namespace engine::hades
 		bool mCreated;
 		AnimationDataDef mDef;
 		std::shared_ptr<AnimationFrameDataSet> pAnimationFrameDataSet;
-		eastl::hash_map<int, engine::misc::HashGuid, eastl::hash<int>, eastl::equal_to<int>> mFrames;
-		eastl::hash_map<int, DWORD64, eastl::hash<int>, eastl::equal_to<int>> mFramesCache; // TODO: Reverse textures and handles
+		//eastl::hash_map<int, engine::misc::HashGuid, eastl::hash<int>, eastl::equal_to<int>> mFrames;
+		//eastl::hash_map<int, DWORD64, eastl::hash<int>, eastl::equal_to<int>> mFramesCache; // TODO: Reverse textures and handles
+		char pad[0x60];
 		_RTL_CRITICAL_SECTION mFramesCacheMutex;
 		bool mFramesCachePermanent;
 	};
