@@ -80,8 +80,8 @@ namespace engine::hades
 		engine::hades::UnitAI mAI;
 		WeaponArsenal arsenal;
 		UnitStatus status;
-		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mPrevColliding;
-		std::unordered_map<unsigned int, std::hash<unsigned int>, std::equal_to<unsigned int>> mCurrentlyColliding;
+		eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mPrevColliding;
+		eastl::hash_map<unsigned int, eastl::hash<unsigned int>, eastl::equal_to<unsigned int>> mCurrentlyColliding;
 		// End
 
 	public:

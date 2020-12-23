@@ -12,9 +12,9 @@ namespace engine::hades
 		}
 
 		// Do not use, not working yet.
-		static std::unordered_map<int, engine::hades::Thing*, std::hash<int>, std::equal_to<int>> GetUnitMap()
+		static eastl::hash_map<int, engine::hades::Thing*, eastl::hash<int>, eastl::equal_to<int>> GetUnitMap()
 		{
-			return (std::unordered_map<int, engine::hades::Thing*, std::hash<int>, std::equal_to<int>>)((uintptr_t)engine::addresses::unitmanager::map_instance - 0x8);
+			return (eastl::hash_map<int, engine::hades::Thing*, eastl::hash<int>, eastl::equal_to<int>>)((uintptr_t)engine::addresses::unitmanager::map_instance - 0x8);
 		}
 
 		static int GetNumUnits()
