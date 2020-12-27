@@ -6,7 +6,7 @@ namespace engine::hades
 	{
 		bool mCreated;
 		engine::hades::MapSaveStatus SaveStatus;
-		std::string mName;
+		char mName[8];
 		engine::misc::IRectangle mArea;
 		D3DXVECTOR2 mTimeLapseCameraLocation;
 		float mTimeLapseCameraZoom;
@@ -31,6 +31,11 @@ namespace engine::hades
 		static void LoadMap(std::string name)
 		{
 			return static_cast<void(__fastcall*)(std::string)>((PVOID)engine::addresses::map::functions::load_map)(name);
+		}
+
+		std::string* GetName(std::string* result)
+		{
+			return static_cast<std::string*(__fastcall*)(Map*, std::string*)>((PVOID)engine::addresses::map::functions::get_name)(this, result);
 		}
 	};
 }

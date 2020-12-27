@@ -95,4 +95,7 @@ namespace global
 
 	std::vector<D3DXVECTOR2> movement_queue;
 
+	D3DXVECTOR2 move_pos;
+
+	INT tick = 0;
 }

@@ -166,6 +166,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST load_map = Memory::SigScan("48 8B C4 55 41 56 41 57 48 8D 68 A1 48 81 EC ? ? ? ? 48 C7 45 ? ? ? ? ? 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 37 48 8B D9");
+				DWORD64 CONST get_name = Memory::SigScan("40 53 48 83 EC 20 48 8B 49 20");
 			}
 		}
 

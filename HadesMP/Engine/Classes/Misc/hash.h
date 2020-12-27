@@ -21,6 +21,8 @@ namespace engine::misc
 		// Constructors
 		HashGuid() : id(0) {}
 
+		HashGuid(int id) : id(id) {}
+
 		HashGuid(const char* s)
 		{
 			this->id = StringIntern(s);

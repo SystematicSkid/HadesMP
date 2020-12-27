@@ -378,6 +378,15 @@ namespace engine::hades
 			return nullptr;
 		}
 
+		std::vector<int> GetWeapons()
+		{
+			std::vector<int> ret;
+			for (auto weapon : mWeapons)
+				if(weapon && weapon->pData)
+					ret.push_back(weapon->pData->name.id);
+			return ret;
+		}
+
 		void AddWeaponControl(Weapon* weapon)
 		{
 			return static_cast<void(__fastcall*)(WeaponArsenal*, Weapon*)>((PVOID)engine::addresses::weaponarsenal::functions::add_weapon_control)
@@ -388,6 +397,14 @@ namespace engine::hades
 		{
 			return static_cast<void(__fastcall*)(WeaponArsenal*, Weapon*, bool)>((PVOID)engine::addresses::weaponarsenal::functions::add_weapon)
 				(this, weapon, false /* bundled */);
+		}
+
+		// Custom
+		void AddWeapon(engine::misc::HashGuid hash)
+		{
+			Weapon* weapon = Weapon::Create(hash, pOwner);
+			if (weapon)
+				this->AddWeapon(weapon);
 		}
 	};
 }

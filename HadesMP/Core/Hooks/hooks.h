@@ -90,6 +90,22 @@ namespace core::hooks
 	PVOID original_request_fire = nullptr;
 	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
 	{
+		auto player_manager = engine::hades::PlayerManager::Instance();
+		auto controllable_unit = player_manager->players[0]->active_unit;
+		if (weapon->mOwnerId == controllable_unit->mId) // This is a local attack
+		{
+			network::json j;
+			j["uid"] = network::client::uuid;
+			j["tick"] = global::tick;
+			j["weapon"] = weapon->pData->name.id;
+			j["angle"] = angle;
+			j["target_location_x"] = target_location.x;
+			j["target_location_y"] = target_location.y;
+			// TODO: Figure out a way to send target
+
+			// Send our packet to the server
+			//network::client::Send("OnWeaponFire", j);
+		}
 		//printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
 		//if (weapon->pGainedControlFrom)
 		//	printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
@@ -133,13 +149,13 @@ namespace core::hooks
 	PVOID original_set_effect = nullptr;
 	void __fastcall hook_set_effect(engine::hades::Weapon* weapon, const char* effect_name, const char* property_name, std::any* val, engine::Reflection_ValueChangeType change_type)
 	{
-		printf("Replicated: 0x%p\n", global::replicated_unit);
+		//printf("Replicated: 0x%p\n", global::replicated_unit);
 		if (weapon && weapon->pData)
 		{
-			printf("weapon: %s\n", weapon->pData->name.ToString());
-			printf("Effect: %s:%s\n", effect_name, property_name);
-			printf("Type: 0x%p\n\n", change_type);
-			printf("Val: 0x%p\n", *val);
+			//printf("weapon: %s\n", weapon->pData->name.ToString());
+			//printf("Effect: %s:%s\n", effect_name, property_name);
+			//printf("Type: 0x%p\n\n", change_type);
+			//printf("Val: 0x%p\n", *val);
 		}
 		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, const char*, std::any*, engine::Reflection_ValueChangeType)>(original_set_effect)
 			(weapon, effect_name, property_name, val, change_type);
@@ -148,14 +164,14 @@ namespace core::hooks
 	PVOID original_set_data = nullptr;
 	void __fastcall hook_set_data(engine::hades::Weapon* weapon, const char* name, std::any* val, int change_type)
 	{
-		printf("Replicated: 0x%p\n", global::replicated_unit);
+		//printf("Replicated: 0x%p\n", global::replicated_unit);
 
 		if (weapon && weapon->pData)
 		{
-			printf("Weapon: %s\n", weapon->pData->name.ToString());
-			printf("Property: %s\n", name);
-			printf("Type: 0x%p\n", change_type);
-			printf("Val: 0x%p\n", *val);
+			//printf("Weapon: %s\n", weapon->pData->name.ToString());
+			//printf("Property: %s\n", name);
+			//printf("Type: 0x%p\n", change_type);
+			//printf("Val: 0x%p\n", *val);
 		}
 		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, std::any*, int)>(original_set_data)(weapon, name, val, change_type);
 	}

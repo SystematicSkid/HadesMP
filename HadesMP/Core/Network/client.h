@@ -18,12 +18,14 @@ namespace core::network::client
 	std::mutex mutex;
 	concurrency::concurrent_vector<json> queue;
 	concurrency::concurrent_vector<NetworkCallback> callbacks;
+	int uuid = -1;
 
 
 	void Consume()
 	{
 		static auto on_connected = [=]()
 		{
+			printf("Connected!\n");
 			trace_handler("on_connected");
 
 			//connected = true;
@@ -121,12 +123,14 @@ namespace core::network::client
 
 	void Send(const std::string& to, json message)
 	{
-		queue.push_back(json{ to, message });
+		if(client.is_connecting_or_connected())
+			queue.push_back(json{ to, message });
 	}
 
 	void Send(const std::string& to, const std::string& message)
 	{
-		queue.push_back(json{ to, message });
+		if (client.is_connecting_or_connected())
+			queue.push_back(json{ to, message });
 	}
 
 	void OnSync(const std::string& name, std::function<void(json)> function)

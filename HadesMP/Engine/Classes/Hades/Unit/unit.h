@@ -109,6 +109,11 @@ namespace engine::hades
 
 		}
 
+		WeaponArsenal* GetArsenal()
+		{
+			return (WeaponArsenal*)((uintptr_t)this + 0x3F8);
+		}
+
 		void DrawExtents()
 		{
 			return static_cast<void(__fastcall*)(Unit*)>((PVOID)engine::addresses::unit::functions::draw_extends)(this);

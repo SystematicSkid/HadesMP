@@ -46,13 +46,6 @@ namespace core::network
 		char name[32];
 	};
 
-	struct NetworkPlayer
-	{
-		NetworkClient client;
-		// location
-		// animation state
-		// velocity
-	};
 
 	namespace packet
 	{

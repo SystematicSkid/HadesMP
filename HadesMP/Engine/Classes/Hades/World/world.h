@@ -58,6 +58,17 @@ namespace engine::hades
 			return static_cast<bool(__fastcall*)(World*,engine::hades::Thing*, engine::misc::Color, float, float, float, float, bool, bool)>((PVOID)engine::addresses::world::functions::add_outline)
 				(this, thing, col, opacity, thickness, threshold, duration, overlay, all_anims);
 		}
+
+		// Custom Methods
+		MapData* GetMapData()
+		{
+			return *(MapData**)((uintptr_t)this + 0xA0);
+		}
+
+		Map* GetMap()
+		{
+			return (Map*)((uintptr_t)this + 0x80);
+		}
 	};
 
 	engine::hades::World*& engine::hades::World::Instance = *(engine::hades::World**)(engine::addresses::world::instance);

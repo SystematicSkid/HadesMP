@@ -2,7 +2,7 @@
 
 namespace engine::hades
 {
-	enum class MapSaveStatus
+	enum class MapSaveStatus : uint8_t
 	{
 	  Unsaved = 0x0,
 	  Map = 0x2,
