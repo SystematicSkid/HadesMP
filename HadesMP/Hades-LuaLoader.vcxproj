@@ -154,6 +154,7 @@
     <ClInclude Include="Core\Hooks\hooks.h" />
     <ClInclude Include="Core\Network\client.h" />
     <ClInclude Include="Core\Network\defines.h" />
+    <ClInclude Include="Core\Network\network.h" />
     <ClInclude Include="Core\Network\server.h" />
     <ClInclude Include="Core\Renderer\renderer.h" />
     <ClInclude Include="Engine\addresses.h" />

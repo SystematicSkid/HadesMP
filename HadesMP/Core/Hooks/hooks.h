@@ -161,6 +161,14 @@ namespace core::hooks
 	}
 
 
+	PVOID original_set_seed = nullptr;
+	DWORD64 __fastcall hook_seed(int seed, int id)
+	{
+		//seed = 2002100;
+		//id = 0;
+		return static_cast<DWORD64(__fastcall*)(int, int)>(original_set_seed)(seed, id);
+	}
+
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
 	{
 		uint8_t shell[] =
@@ -222,6 +230,9 @@ namespace core::hooks
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_data_property, &hook_set_data, &original_set_data);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_data_property);
 
+		PVOID hook_address = (PVOID)Memory::SigScan("48 83 EC 28 83 FA 01 75 0B");
+		MH_CreateHook(hook_address, &hook_seed, &original_set_seed);
+		MH_EnableHook(hook_address);
 		//MH_CreateHook((PVOID)engine::addresses::unit::functions::has_same_team, &hook_has_same_team, &original_check_team);
 		//MH_EnableHook((PVOID)engine::addresses::unit::functions::has_same_team);
 		// Script load hook
@@ -236,6 +247,6 @@ namespace core::hooks
 		VirtualProtect((PVOID)address, 6, protect, &protect);
 
 		// DirectX hook
-		hooks::directx::initialize();
+		//
 	}
 }

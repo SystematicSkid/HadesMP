@@ -12,95 +12,144 @@
 
 namespace core::network::server
 {
-	auto trace_handler = [&](const std::string& msg)
-	{
-		std::cout << "server: " << msg << std::endl;
-	};
+	enetpp::trace_handler trace_handler;
+	enetpp::server<server_client> server;
+	std::mutex mutex;
+	concurrency::concurrent_vector<json> queue;
+	concurrency::concurrent_vector<NetworkCallback> callbacks;
 
-	struct server_client
-	{
-		unsigned int _uid;
-		unsigned int get_uid() const { return _uid; } //MUST return globally unique value here
-	};
 
 	unsigned int next_uid = 1;
-	auto init_client_func = [&](server_client& client, const char* ip)
+	inline auto init_client_func = [&](server_client& client, const char* ip)
 	{
 		client._uid = next_uid;
 		next_uid++;
 	};
 
-	bool server_init(int port)
+
+	void StartListening(const std::string& hostname, enet_uint16 port)
 	{
-		/*if (enet_initialize() != 0)
-			return false;
-
-		ENetAddress address;
-		enet_address_set_host(&address, "localhost");
-		address.port = port;
-
-		ENetHost* host = enet_host_create(&address, max_players, 2, 0, 0);
-		if (!host)
-			return false;*/
-
-		enetpp::server<server_client> server;
-		server.set_trace_handler(trace_handler);
-
 		server.start_listening(enetpp::server_listen_params<server_client>()
-			.set_max_client_count(20)
 			.set_channel_count(1)
+			.set_max_client_count(0xFFF)
+			.set_incoming_bandwidth(0)
+			.set_outgoing_bandwidth(0)
 			.set_listen_port(port)
 			.set_initialize_client_function(init_client_func));
+	}
 
-		std::vector<uint8_t> buf;
-		core::network::packet::anime obj{ {20, 20}, cista::raw::string{"test"} };
-		buf = cista::serialize(obj);
+	void Send(int id, const std::string& to, json message)
+	{
+		queue.push_back(json{ id, json{ to, message } });
+	}
+	void Send(int id, const std::string& to, const std::string& message)
+	{
+		queue.push_back(json{ id, json{ to, message } });
+	}
 
+	void Consume()
+	{
+		static auto on_connected = [=](server_client& client)
+		{
+			trace_handler("on_connected");
+
+			for (auto c : server.get_connected_clients())
+				Send(c->get_uid(), "JoinMSGPacket", json{ std::string(std::to_string(client.get_uid()) + " has joined.") });
+
+			//connected = true;
+		};
+
+		static auto on_disconnected = [=](unsigned int client_uid)
+		{
+			trace_handler("on_disconnected");
+		};
+
+		static auto on_data_received = [=](server_client& client, const enet_uint8* data, size_t data_size)
+		{
+			try
+			{
+				json j_from_cbor = json::from_cbor(data, data + data_size);
+
+				std::string callback_name = j_from_cbor[0];
+
+				json message = j_from_cbor[1];
+
+				for (auto& callback : callbacks)
+				{
+					if (callback.name == callback_name)
+						callback.callback(message);
+				}
+			}
+			catch (std::exception& e)
+			{
+				MessageBoxA(NULL, e.what(), e.what(), NULL);
+			}
+		};
+
+		server.consume_events(on_connected, on_disconnected, on_data_received);
+	}
+
+	void Invoke()
+	{
 		while (server.is_listening())
 		{
-			//send stuff to specific client where uid=123
-
-			//servertrace_handler(std::to_string((DWORD64)buf.data()).c_str());
-
-			server.send_packet_to(1, 0, buf.data(), buf.size(), ENET_PACKET_FLAG_RELIABLE);
-
-			//send stuff to all clients (with optional predicate filter)
-			//server.send_packet_to_all_if(0, &data_to_send, 1, ENET_PACKET_FLAG_RELIABLE, [&](const server_client& destination) { return true; });
-
-			static auto on_connected = [=](server_client& client)
+			if (!server.get_connected_clients().empty())
 			{
-				trace_handler("server_on_connected");
+				for (auto& msg : queue)
+				{
+					auto cbor = json::to_cbor(msg[1]);
 
-				//connected = true;
-			};
+					if (cbor.data())
+						server.send_packet_to(msg[0], 0, reinterpret_cast<const enet_uint8*>(cbor.data()), cbor.size(), ENET_PACKET_FLAG_RELIABLE);
+				}
 
-			static auto on_disconnected = [=](unsigned int client_uid)
-			{
-				trace_handler("server_on_disconnected");
-			};
-
-			static auto on_data_received = [=](server_client& client, const enet_uint8* data, size_t data_size)
-			{
-				trace_handler("server_on_datarecv");
-
-				std::vector<uint8_t> serialized_data(&data[0], &data[data_size]);
-				auto deserialized_data = cista::deserialize<core::network::packet::anime>(serialized_data);
-
-				trace_handler(deserialized_data->msg.str());
-			};
-
-			server.consume_events(
-				on_connected,
-				on_disconnected,
-				on_data_received);
-
-			//get access to all connected clients
-			for (auto c : server.get_connected_clients())
-			{
-				//do something?
+				queue = concurrency::concurrent_vector<json>{};
+				//queue.clear();
 			}
+
+			Consume();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
+	}
+
+	void Thread()
+	{
+		enetpp::global_state::get().initialize();
+
+		trace_handler = [&](const std::string& msg)
+		{
+			std::lock_guard<std::mutex> lock(mutex);
+			std::cout << "server: " << msg << "\n";
+		};
+
+		server.set_trace_handler(trace_handler);
+
+		StartListening("localhost", 27017);
+
+		Invoke();
+
+		std::terminate();
+	}
+
+	std::unique_ptr<std::thread> Init()
+	{
+		return std::make_unique<std::thread>(&Thread);
+	}
+	
+	void StopListening()
+	{
+		server.stop_listening();
+	}
+	
+	void OnSync(const std::string& name, std::function<void(json)> function)
+	{
+		std::promise<json> promise;
+
+		callbacks.push_back(NetworkCallback(name, [&](json message) { promise.set_value(message); }));
+
+		std::future<json> future = promise.get_future();
+
+		function(future.get());
 	}
 }

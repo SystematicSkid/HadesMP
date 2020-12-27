@@ -3,6 +3,26 @@
 
 namespace core::network
 {
+
+	template<class K, class V, class dummy_compare, class A>
+	using my_workaround_fifo_map = nlohmann::fifo_map<K, V, nlohmann::fifo_map_compare<K>, A>;
+
+	using json = nlohmann::basic_json<my_workaround_fifo_map>;
+
+	struct NetworkCallback
+	{
+		NetworkCallback(std::string name, std::function<void(json)> callback) : name(name), callback(callback) {}
+
+		std::string name;
+		std::function<void(json)> callback;
+	};
+
+	struct server_client
+	{
+		unsigned int _uid;
+		unsigned int get_uid() const { return _uid; } //MUST return globally unique value here
+	};
+
 	enum class ClientState
 	{
 		Connected,

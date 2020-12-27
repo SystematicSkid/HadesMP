@@ -200,5 +200,8 @@
     <ClInclude Include="Engine\Classes\Hades\groupmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Network\network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

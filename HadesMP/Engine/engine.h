@@ -7,6 +7,7 @@
 #include <functional>
 #include <unordered_map>
 #include <unordered_set>
+#include <deque>
 
 /* Windows */
 #include <Windows.h>
@@ -91,5 +92,7 @@ namespace global
 	engine::hades::Thing* replicated_unit = nullptr;
 	engine::hades::Thing* original_unit = nullptr;
 	FLOAT delta_time;
+
+	std::vector<D3DXVECTOR2> movement_queue;
 
 }

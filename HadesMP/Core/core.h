@@ -30,6 +30,8 @@
 #include <cassert>
 #include <mutex>
 #include <thread>
+#include <concurrent_vector.h>
+
 
 /* Engine Access */
 #include "../Engine/engine.h"
@@ -38,8 +40,7 @@
 #include "../Utilities/memory.h"
 #include "../Utilities/proxy.h"
 
-#include "Network/server.h"
-#include "Network/client.h"
+#include "./Network/network.h"
 
 /* Hooks */
 #include "./Hooks/hooks.h"
@@ -59,8 +60,8 @@ namespace core
 
 	void proxy_thread()
 	{
-		//auto client = std::make_unique<std::thread>(&core::network::client::client_init, 27017);
-		//client->join();
+		auto client = network::client::Init();
+		client->join();
 	}
 
 	bool initialize()
@@ -90,7 +91,7 @@ namespace core
 			renderer_start_drawing();
 			geometry g;
 			g.push_draw_cmd();
-			text.draw_text(&g, { 120, 30 }, "Hades Online - v0.2", { 255,255,255,255 }, TEXT_CENTERED | TEXT_OUTLINE, { 0,0,0,127 });
+			text.draw_text(&g, { 120, 30 }, "Hades Online - v0.3", { 255,255,255,255 }, TEXT_CENTERED | TEXT_OUTLINE, { 0,0,0,127 });
 
 			auto player_manager = engine::hades::PlayerManager::Instance();
 			auto controllable_unit = player_manager->players[0]->active_unit;
@@ -133,6 +134,7 @@ namespace core
 				{
 					/* Initialize all here */
 					printf("Creating thread...\n");
+					hooks::directx::initialize();
 					CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)proxy_thread, NULL, NULL, NULL);
 					printf("Finished creating thread!\n");
 				});
@@ -235,39 +237,44 @@ namespace core
 
 			if (global::replicated_unit && controllable_unit)
 			{
-
-				/* W2S Test */
-				float parallax = controllable_unit->GetParallaxAmount();
-				D3DXVECTOR2 screen;
-				engine::hades::Camera::Instance()->WorldToScreenParallax(&controllable_unit->location, &screen, parallax);
-				//printf("%f %f\n", screen.x, screen.y);
-
-				auto unit_type = (engine::hades::Unit*)global::replicated_unit;
-				auto unit_type_original = (engine::hades::Unit*)controllable_unit;
-				//unit_type->status.SetAsAlly();
-
-				// The replicated unit does not have any weapons, create them!
-				if (unit_type->arsenal.mWeapons.size() < 3)
-					unit_type->CopyArsenal((engine::hades::Unit*)controllable_unit);
+				// Send move command
+				if (!global::movement_queue.empty())
+				{
+					printf("Queue Size: %i\n", global::movement_queue.size());
+					auto pos = global::movement_queue[0];
+					global::replicated_unit->MoveInput(&pos, 1.0f, false, dt);
+					printf("Move: %f %f\n", pos.x, pos.y);
+					global::movement_queue.erase(global::movement_queue.begin());
+				}
 
 			};
 
-			if (engine::hades::World::Instance)
+			/*if (engine::hades::World::Instance)
 			{
 				auto world = engine::hades::World::Instance;
 				auto group_manager = world->pGroupManager;
 				if (group_manager)
 				{
-					/*printf("Group manager: 0x%p\n", group_manager);
-					printf("Groups: 0x%p\n", &group_manager->mGroups);*/
+					/ *printf("Group manager: 0x%p\n", group_manager);
+					printf("Groups: 0x%p\n", &group_manager->mGroups);* /
 					auto enemy_team = group_manager->Get("EnemyTeam");
 					if (enemy_team)
 					{
 						printf("Enemy team: 0x%p\n", enemy_team);
 					}
 				}
-			}
+			}*/
 
+			if (controllable_unit)
+			{
+				auto coords = controllable_unit->location;
+				network::json j;
+				j["time"] = engine::hades::World::Instance->mElapsedTime;
+				j["position_x"] = coords.x;
+				j["position_y"] = coords.y;
+
+				core::network::client::Send("OnUpdatePacket", j);
+			}
 		};
 
 		/* Everything was initialized correctly! */
