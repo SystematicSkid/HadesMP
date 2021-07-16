@@ -79,8 +79,8 @@
 #include "./Classes/Hades/player.h"
 #include "./Classes/Hades/inputhandler.h"
 #include "./Classes/Hades/playermanager.h"
-#include "./Classes/Hades/unitmanager.h"
 #include "./Classes/Hades/groupmanager.h"
+#include "./Classes/Hades/unitmanager.h"
 
 /* World Classes */
 #include "./Classes/Hades/World/map.h"

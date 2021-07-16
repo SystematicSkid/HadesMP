@@ -330,10 +330,10 @@ namespace engine::hades
 
 	public:
 		// Methods
-		bool RequestFire(float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
+		bool RequestFire(float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target, bool apply_self_effects, D3DXVECTOR2 from_location)
 		{
-			return static_cast<bool(__fastcall*)(Weapon*, float, D3DXVECTOR2, engine::hades::Thing*)>((PVOID)engine::addresses::weapon::functions::request_fire)
-				(this, angle, target_location, target);
+			return reinterpret_cast<bool(__fastcall*)(Weapon*, float, D3DXVECTOR2, engine::hades::Thing*, bool, D3DXVECTOR2)>(engine::addresses::weapon::functions::request_fire)
+				(this, angle, target_location, target, apply_self_effects, from_location);
 		}
 
 		// Use Hash ToString!

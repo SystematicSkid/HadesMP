@@ -8,6 +8,7 @@ namespace engine::hades
 		engine::misc::HashGuid mName;
 
 		// Constructor
+		MapThingGroupId() {}
 		MapThingGroupId(const char* name)
 		{
 			this->mName = engine::misc::HashGuid(name);

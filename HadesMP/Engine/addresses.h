@@ -213,6 +213,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST get_weapon_data = Memory::GetCallAddress("E8 ? ? ? ? 48 85 C0 74 15 48 8B D7");
+				DWORD64 CONST get_unit_data = Memory::GetCallAddress("E8 ? ? ? ? 38 58 31");
 			}
 		}
 

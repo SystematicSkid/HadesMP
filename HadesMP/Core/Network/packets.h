@@ -84,7 +84,7 @@ namespace core::network::packets
 	{
 	public:
 		AttackPacket() {}
-		AttackPacket(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_position, engine::hades::Thing* target)
+		AttackPacket(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_position, engine::hades::Thing* target, bool apply_self, D3DXVECTOR2 from)
 		{
 			weapon_hash = weapon->pData->name.ToString();
 			this->angle = angle;
@@ -100,6 +100,10 @@ namespace core::network::packets
 			{
 				this->target_name = "";
 			}
+
+			this->from_position_x = from.x;
+			this->from_position_y = from.y;
+			this->apply_self_effects = apply_self;
 
 			/* Set weapon data */
 			reload_paused = weapon->mReloadPaused;
@@ -119,6 +123,9 @@ namespace core::network::packets
 		float angle;
 		float target_position_x;
 		float target_position_y;
+		float from_position_x;
+		float from_position_y;
+		bool apply_self_effects;
 		/* Weapon data */
 		bool reload_paused;
 		bool require_control_release;

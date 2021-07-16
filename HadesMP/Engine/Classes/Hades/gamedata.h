@@ -22,5 +22,10 @@ namespace engine::hades
 		{
 			return static_cast<class WeaponData* (__fastcall*)(engine::misc::HashGuid)>((PVOID)engine::addresses::gamedatamanager::functions::get_weapon_data)(name);
 		}
+
+		static class UnitData* GetUnitData(engine::misc::HashGuid name)
+		{
+			return reinterpret_cast<class UnitData* (__fastcall*)(engine::misc::HashGuid)>(engine::addresses::gamedatamanager::functions::get_unit_data)(name);
+		}
 	};
 }

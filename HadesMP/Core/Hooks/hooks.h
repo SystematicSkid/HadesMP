@@ -87,51 +87,39 @@ namespace core::hooks
 	}
 
 	PVOID original_request_fire = nullptr;
-	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
+	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target, bool apply_self_effects, D3DXVECTOR2 from_location)
 	{
 		auto player_manager = engine::hades::PlayerManager::Instance();
 		auto controllable_unit = (engine::hades::Unit*)player_manager->players[0]->active_unit;
 		
 		//printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
 		
-		int weapon_id = weapon->pData->name.id;
-		printf("Weapon %s\n", weapon->pData->name.ToString());
+		//int weapon_id = weapon->pData->name.id;
+		//printf("Weapon %s\n", weapon->pData->name.ToString());
 		/* Localplayer attack */
-		if (weapon->mOwnerId == controllable_unit->mId)
+		if(controllable_unit)
 		{
-			/* Tell replicated unit to attack */
-			//engine::hades::Weapon* repl_weapon = global::replicated_unit->arsenal.GetWeapon(weapon->pData->name);
-			//if(repl_weapon)
-			//	repl_weapon->RequestFire(global::replicated_unit->GetAngle(target_location), target_location, target);
-			if(weapon->IsReadyToFire() && controllable_unit->IsReadyToFire())
+			if (weapon->mOwnerId == controllable_unit->mId)
 			{
-				msgpack::zone z;
-				/* Send attack packet */
-				network::packets::AttackPacket attack_packet(weapon, angle, target_location, target);
-				network::packets::Packet packet(network::packets::PacketType::OnAttack, msgpack::object(attack_packet, z));
-				std::stringstream ss;
-				msgpack::pack(ss, packet);
-				network::client.Send(ss.str());
+				/* Tell replicated unit to attack */
+				//engine::hades::Weapon* repl_weapon = global::replicated_unit->arsenal.GetWeapon(weapon->pData->name);
+				//if(repl_weapon)
+				//	repl_weapon->RequestFire(global::replicated_unit->GetAngle(target_location), target_location, target);
+				if (weapon->IsReadyToFire() && controllable_unit->IsReadyToFire())
+				{
+					msgpack::zone z;
+					/* Send attack packet */
+					network::packets::AttackPacket attack_packet(weapon, angle, target_location, target, apply_self_effects, from_location);
+					network::packets::Packet packet(network::packets::PacketType::OnAttack, msgpack::object(attack_packet, z));
+					std::stringstream ss;
+					msgpack::pack(ss, packet);
+					network::client.Send(ss.str());
+				}
 			}
 		}
 
-		/*if (weapon->mOwnerId == controllable_unit->mId) // This is a local attack
-		{
-			network::json j;
-			j["uid"] = network::client::uuid;
-			j["tick"] = global::tick;
-			j["weapon"] = weapon->pData->name.id;
-			j["angle"] = angle;
-			j["target_location_x"] = target_location.x;
-			j["target_location_y"] = target_location.y;
-			// TODO: Figure out a way to send target
-
-			// Send our packet to the server
-			//network::client::Send("OnWeaponFire", j);
-		}*/
-		//if (weapon->pGainedControlFrom)
-		//	printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
-		return static_cast<bool(__fastcall*)(engine::hades::Weapon*, float, D3DXVECTOR2, engine::hades::Thing*)>(original_request_fire)(weapon, angle, target_location, target);
+		return reinterpret_cast<bool(__fastcall*)(engine::hades::Weapon*, float, D3DXVECTOR2, engine::hades::Thing*, bool, D3DXVECTOR2)>(original_request_fire)
+			(weapon, angle, target_location, target, apply_self_effects, from_location);
 	}
 
 	PVOID original_load_next_map = nullptr;
@@ -262,7 +250,7 @@ namespace core::hooks
 
 	PVOID original_create_enemy_unit = nullptr;
 	engine::hades::Unit* __fastcall hook_create_enemy_unit(engine::hades::UnitData* unit_data, D3DXVECTOR2 location, engine::hades::MapThing* map_thing, std::vector<engine::hades::MapThingGroupId>* group_names,
-		const engine::hades::MapThingGroupId* first_group_name, bool do_active_presentation, bool needs_lua_init, engine::hades::Unit* spawned_by)
+		const engine::hades::MapThingGroupId* first_group_name, uint8_t do_active_presentation, bool needs_lua_init, engine::hades::Unit* spawned_by)
 	{
 		bool is_host = network::is_host;
 		/* Get original unit created */
@@ -282,7 +270,10 @@ namespace core::hooks
 			network::client.Send(ss.str());
 		}
 		else
-			unit->Delete();// Delete unit if not host, await server entity creation packet
+		{
+			if(do_active_presentation != 2) // This entity was not created by server.
+				unit->Delete();// Delete unit if not host, await server entity creation packet
+		}
 		return unit;
 	}
 

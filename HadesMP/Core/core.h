@@ -342,6 +342,26 @@ namespace core
 				}
 			}));
 
+		network::client.callbacks.push_back(network::NetworkCallback(network::packets::PacketType::OnAddEnemy, [=](std::string data)
+			{
+				/* Setup packet from data stream */
+				msgpack::object_handle handle = msgpack::unpack(data.data(), data.size());
+				msgpack::object msg = handle.get();
+				network::packets::Packet base_packet = msg.as<network::packets::Packet>();
+
+				network::packets::AddEnemyPacket packet = base_packet.data.as<network::packets::AddEnemyPacket>();
+
+
+				if (global::replicated_unit)
+				{
+					engine::misc::HashGuid unit_hash(packet.enemy_name.c_str());
+					engine::hades::UnitData* unit_data = engine::hades::GameDataManager::GetUnitData(unit_hash);
+					D3DXVECTOR2 location(packet.location_x, packet.location_y);
+					auto* unit = engine::hades::UnitManager::CreateEnemyUnit(unit_data, location);
+					unit->mId = packet.id;
+				}
+			}));
+
 		network::client.callbacks.push_back(network::NetworkCallback(network::packets::PacketType::OnAttack, [=](std::string data)
 			{
 				/* Setup packet from data stream */
@@ -403,7 +423,7 @@ namespace core
 						weapon->mAmmo = packet.ammo;
 						weapon->mVolley = packet.volley;
 						weapon->mReloadTimeRemaining = packet.reload_time_remaining;
-						weapon->RequestFire(packet.angle, D3DXVECTOR2(packet.target_position_x, packet.target_position_y), target);
+						weapon->RequestFire(packet.angle, D3DXVECTOR2(packet.target_position_x, packet.target_position_y), target, packet.apply_self_effects, D3DXVECTOR2(packet.from_position_x, packet.from_position_y));
 					}
 				}
 			}));
