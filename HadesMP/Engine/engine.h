@@ -40,6 +40,7 @@
 #include "./Enums/rtti.h"
 #include "./Enums/moveai.h"
 #include "./Enums/reflection.h"
+#include "./Enums/weapon.h"
 
 /* Utility Classes */
 #include "./Classes/Misc/rectangle.h"
@@ -48,6 +49,7 @@
 #include "./Classes/Misc/color.h"
 #include "./Classes/Misc/bounds.h"
 #include "./Classes/Misc/handle.h"
+#include "./Classes/Misc/any.h"
 
 /* Classes */
 #include "./Classes/rtti.h"
@@ -75,6 +77,7 @@
 
 #include "./Classes/Hades/camera.h"
 #include "./Classes/Hades/player.h"
+#include "./Classes/Hades/inputhandler.h"
 #include "./Classes/Hades/playermanager.h"
 #include "./Classes/Hades/unitmanager.h"
 #include "./Classes/Hades/groupmanager.h"
@@ -89,7 +92,7 @@ namespace global
 	engine::hades::MapThing* new_map_thing = nullptr;
 	D3DXVECTOR2 spawn_location;
 
-	engine::hades::Thing* replicated_unit = nullptr;
+	engine::hades::Unit* replicated_unit = nullptr;
 	engine::hades::Thing* original_unit = nullptr;
 	FLOAT delta_time;
 

@@ -84,9 +84,9 @@ public:
 	{
 		auto address = Memory::SigScan(pattern);
 		if (!address)
-		{
 			address = Memory::SigScan(secondary_pattern);
-		}
+		if (!address)
+			MessageBoxA(NULL, pattern, NULL, NULL);
 		uintptr_t call_addr = (address + *(signed long*)(address + 1) + 5);
 		return call_addr;
 	}
@@ -94,6 +94,8 @@ public:
 	static ptr GetInstanceAddress(const char* pattern)
 	{
 		auto address = Memory::SigScan(pattern);
+		if (!address)
+			MessageBoxA(NULL, pattern, NULL, NULL);
 		return (ptr)(address + *(signed long*)(address + 3) + 7);
 	}
 };

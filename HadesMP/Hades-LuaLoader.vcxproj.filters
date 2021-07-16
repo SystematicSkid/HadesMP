@@ -167,7 +167,7 @@
     <ClInclude Include="Core\Network\client.h">
       <Filter>Header Files\Core\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Network\defines.h">
+    <ClInclude Include="Core\Network\packets.h">
       <Filter>Header Files\Core\Network</Filter>
     </ClInclude>
     <ClInclude Include="Core\Network\server.h">
@@ -201,6 +201,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Network\network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Enums\weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Misc\any.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Classes\Hades\inputhandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

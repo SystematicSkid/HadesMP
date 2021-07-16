@@ -40,7 +40,11 @@
 #include "../Utilities/memory.h"
 #include "../Utilities/proxy.h"
 
+/* Networking */
+#include "./Network/packets.h"
 #include "./Network/network.h"
+#include "./Network/client.h"
+#include "./Network/server.h"
 
 /* Hooks */
 #include "./Hooks/hooks.h"
@@ -58,9 +62,13 @@ namespace core
 	font text;
 	font world_text;
 
+	int tick = 0;
+
 	void proxy_thread()
 	{
-		auto client = network::client::Init();
+		auto client = network::client.Init();
+		auto server = network::server.Init();
+		server->join();
 		client->join();
 	}
 
@@ -91,7 +99,7 @@ namespace core
 			renderer_start_drawing();
 			geometry g;
 			g.push_draw_cmd();
-			text.draw_text(&g, { 120, 30 }, "Hades Online - v0.4", { 255,255,255,255 }, TEXT_CENTERED | TEXT_OUTLINE, { 0,0,0,127 });
+			text.draw_text(&g, { 120, 30 }, "Hades Online - v0.5", { 255,255,255,255 }, TEXT_CENTERED | TEXT_OUTLINE, { 0,0,0,127 });
 
 			auto player_manager = engine::hades::PlayerManager::Instance();
 			auto controllable_unit = player_manager->players[0]->active_unit;
@@ -108,7 +116,7 @@ namespace core
 						continue;
 					if (!unit->IsTargetable())
 						continue;
-					if (unit->spawn_location == unit->location)
+					if (unit->mSpawnLocation == unit->location)
 						continue;
 					engine::misc::HashGuid tmp;
 					auto name = unit->GetName(&tmp);
@@ -140,19 +148,34 @@ namespace core
 				});
 
 			auto player_manager = engine::hades::PlayerManager::Instance();
-			auto controllable_unit = player_manager->players[0]->active_unit;
+			auto controllable_unit = (engine::hades::Unit*)player_manager->players[0]->active_unit;
 			auto world = engine::hades::World::Instance;
-
+			app->mIsActive = true;
+			app->mWasActive = true;
+			if (world)
+			{
+				world->mPaused = false;
+				world->mRunning = true;
+			}
 
 			// We need to verify that the lua handler has already assigned our player's active unit
-			/*if (global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit && !global::replicated_unit)
+			if (global::new_map_thing && global::new_unit_data && player_manager && player_manager->players[0]->active_unit && !global::replicated_unit)
 			{
 				printf("\n\nCreating new unit!\n");
 				printf("Location: %f %f\n", global::spawn_location.x, global::spawn_location.y);
 				printf("Data: 0x%p\n", global::new_unit_data);
 				printf("Thing: 0x%p\n", global::new_map_thing);
 
+				printf("Unit data: 0x%p\n", global::new_unit_data->mPlayerUnitData);
+				printf("Playermanager: 0x%p\n", engine::hades::PlayerManager::Instance());
+				//global::new_unit_data->mPlayerUnitData->mPlayerIndex++;
+
 				global::replicated_unit = engine::hades::UnitManager::CreatePlayerUnit(global::new_unit_data, global::spawn_location, global::new_map_thing, false, false);
+				//engine::hades::PlayerManager::Instance()->AssignController((engine::hades::Player*)global::replicated_unit, 1);
+				global::replicated_unit->CopyArsenal(controllable_unit);
+				global::replicated_unit->pData->mPlayerControlled = false;
+				//engine::hades::PlayerManager::Instance()->players[1]->active_unit = global::replicated_unit;
+				//engine::hades::PlayerManager::Instance()->players[1]->controller_index = 4;
 				engine::misc::Color col(255, 0, 0, 255);
 				world->AddOutline(global::replicated_unit, col, 1.f, 2.f, 0.5f, -1.f, true, true);
 				printf("0x%p\n", engine::hades::World::Instance);
@@ -164,7 +187,7 @@ namespace core
 				// Copy the lua table over
 				global::replicated_unit->mAttachedLua.state = controllable_unit->mAttachedLua.state;
 				global::replicated_unit->mAttachedLua.ref = controllable_unit->mAttachedLua.ref;
-			}*/
+			}
 
 			
 			if (global::replicated_unit && controllable_unit)
@@ -176,10 +199,29 @@ namespace core
 						global::replicated_unit->MoveInput(&global::move_pos, 1.0, false, dt);
 				}
 
-			};
+			}
+
+			if (controllable_unit)
+			{
+				msgpack::zone z;
+				/* Send movement packet */
+				network::packets::MovementPacket movement_packet(controllable_unit);
+				network::packets::Packet packet(network::packets::PacketType::OnMovementUpdate, msgpack::object(movement_packet, z));
+				std::stringstream ss;
+				msgpack::pack(ss, packet);
+				network::client.Send(ss.str());
+
+				/* Send Input packet */
+				/*msgpack::zone z;
+				network::packets::PlayerInputPacket input_packet(engine::hades::PlayerManager::Instance()->inputs[0]);
+				network::packets::Packet packet(network::packets::PacketType::OnPlayerInput, msgpack::object(input_packet, z));
+				std::stringstream ss;
+				msgpack::pack(ss, packet);
+				network::client.Send(ss.str());*/
+			}
 
 			/* Create network players if needed */
-			if(controllable_unit)
+			/*if(controllable_unit)
 			{
 				for (auto player : network::network_players)
 				{
@@ -206,7 +248,7 @@ namespace core
 						{
 							player->character->MoveInput(&player->network_position, 1.f, false, true);
 						}
-						/*auto unit = (engine::hades::Unit*)player->character;
+						/ *auto unit = (engine::hades::Unit*)player->character;
 						// Check if we are missing any weapons or have too many!
 						if (player->weapons.size() != unit->GetArsenal()->mWeapons.size())
 						{
@@ -217,14 +259,14 @@ namespace core
 								auto hash = engine::misc::HashGuid(id);
 								unit->GetArsenal()->AddWeapon(hash);
 							}
-						}*/
+						}* /
 					}
 				}
-			}
+			}*/
 			
 			/* Send network information */
 			/* Ensure we are connected */
-			if(network::client::uuid != -1)
+			/*if(network::client::uuid != -1)
 			{
 				network::json j;
 				j["uid"] = network::client::uuid;
@@ -232,7 +274,7 @@ namespace core
 				j["tick"] = global::tick++;
 
 				//j["has_unit"] = (bool)(controllable_unit != nullptr);
-				/* Player Specific information */
+				/ * Player Specific information * /
 				j["player_position_x"] = 0.f;
 				j["player_position_y"] = 0.f;
 				j["world_map"] = "";
@@ -244,8 +286,8 @@ namespace core
 					float pos_y = controllable_unit->location.y;
 					j["player_position_x"] = (float)pos_x;
 					j["player_position_y"] = (float)pos_y;
-					/* World Specific information*/
-					/* This won't exist without the player regardless */
+					/ * World Specific information* /
+					/ * This won't exist without the player regardless * /
 					//j["has_world"] = (world != nullptr && world->GetMapData() != nullptr);
 					if (world && world->mMap.mData)
 					{
@@ -258,96 +300,115 @@ namespace core
 					j["player_arsenal"] = weapons;
 				}
 				core::network::client::Send("OnTick", j);
-			}
+			}*/
 		};
 
+
+
 		/* Network callbacks */
-		network::client::callbacks.push_back(network::NetworkCallback("ConnectPacket", [&](network::json j)
+
+		network::client.callbacks.push_back(network::NetworkCallback(network::packets::PacketType::OnMovementUpdate, [=](std::string data)
 			{
-				printf("A player has connected to the server!\n");
-				int uuid = j["uid"];
-				if(network::client::uuid == -1) // This is our connection
+				/* Setup packet from data stream */
+				msgpack::object_handle handle = msgpack::unpack(data.data(), data.size());
+				msgpack::object msg = handle.get();
+				network::packets::Packet base_packet = msg.as<network::packets::Packet>();
+
+				network::packets::MovementPacket packet = base_packet.data.as<network::packets::MovementPacket>();
+
+				
+				if (global::replicated_unit)
 				{
-					printf("Setting uuid\n");
-					network::client::uuid = uuid;
-					std::vector<int> clients = j["clients"];
-					for (auto client : clients)
+					global::replicated_unit->mIsMoving = packet.is_moving;
+					//global::replicated_unit->SetAngle(packet.angle);
+					global::move_pos.x = packet.location_x;
+					global::move_pos.y = packet.location_y;
+				}
+			}));
+
+		network::client.callbacks.push_back(network::NetworkCallback(network::packets::PacketType::OnPlayerInput, [=](std::string data)
+			{
+				/* Setup packet from data stream */
+				msgpack::object_handle handle = msgpack::unpack(data.data(), data.size());
+				msgpack::object msg = handle.get();
+				network::packets::Packet base_packet = msg.as<network::packets::Packet>();
+
+				network::packets::PlayerInputPacket packet = base_packet.data.as<network::packets::PlayerInputPacket>();
+
+
+				if (global::replicated_unit)
+				{
+					engine::hades::PlayerManager::Instance()->inputs[4]->SetButtons(packet.buttons);
+				}
+			}));
+
+		network::client.callbacks.push_back(network::NetworkCallback(network::packets::PacketType::OnAttack, [=](std::string data)
+			{
+				/* Setup packet from data stream */
+				msgpack::object_handle handle = msgpack::unpack(data.data(), data.size());
+				msgpack::object msg = handle.get();
+				network::packets::Packet base_packet = msg.as<network::packets::Packet>();
+
+				network::packets::AttackPacket packet = base_packet.data.as<network::packets::AttackPacket>();
+
+
+				if (global::replicated_unit)
+				{
+					engine::hades::Unit* unit = global::replicated_unit;
+					engine::misc::HashGuid weapon_hash(packet.weapon_hash.c_str());
+					engine::hades::Weapon* weapon = unit->arsenal.GetWeapon(weapon_hash);
+					printf("Packet weapon: %i\n", packet.weapon_hash);
+					printf("Packet %s\n", weapon_hash.ToString());
+					if (!weapon)
 					{
-						printf("Initializing existing player...\n");
-						core::network::network_players.push_back(new network::NetworkPlayer(client));
+						unit->arsenal.AddWeapon(engine::hades::Weapon::Create(weapon_hash, unit));
+						weapon = unit->arsenal.GetWeapon(weapon_hash);
 					}
 
-					//global::tick = j["connect_tick"];
-				}
-				else
-				{
-					printf("Creating new network player!\n");
-					core::network::network_players.push_back(new network::NetworkPlayer(uuid));
-				}
-			}));
-
-		network::client::callbacks.push_back(network::NetworkCallback("OnTick", [&](network::json j)
-			{
-				/* Update all of our networked player information */
-				auto player_manager = engine::hades::PlayerManager::Instance();
-				auto controllable_unit = player_manager->players[0]->active_unit;
-				std::string dump = j.dump(4);
-				int uuid = j["uid"];
-				if (uuid == -1)
-					return;
-				auto client = network::GetPlayer(uuid);
-				if (client)
-				{
-					//if((bool)j["has_unit"])
-					//{
-					float pos_x = (float)j["player_position_x"];
-					float pos_y = (float)j["player_position_y"];
-					D3DXVECTOR2 position = D3DXVECTOR2(pos_x, pos_y);
-					client->network_position = position;
-					std::vector<int> weapons = j["player_arsenal"];
-					client->weapons = weapons;
-					//}
-					//else // Destroy our copy of their character
-					//{
-					//	client->network_position = D3DXVECTOR2();
-					//	if (client->character)
-					//		client->character->Destroy();
-					//	client->character = nullptr;
-					//}
-					/*if ((bool)j["has_world"])
+					engine::hades::Thing* target = nullptr;
+					if (packet.target_name.length() > 0)
 					{
-						client->map = std::string(j["world_map"]);
-					}*/
-					client->map = std::string(j["world_map"]);
+						auto units = engine::hades::UnitManager::GetAllUnits();
+						for (int i = 0; i < engine::hades::UnitManager::GetNumUnits(); i++)
+						{
+							auto unit = units[i];
+							if (!unit)
+								continue;
+							if (!(unit->mType & engine::Unit))
+								continue;
+							if (!unit->IsTargetable())
+								continue;
+							if (unit->mSpawnLocation == unit->location)
+								continue;
+							engine::misc::HashGuid tmp;
+							auto name = unit->GetName(&tmp);
+							std::string str_name = name->ToString();
+							if (str_name == packet.target_name)
+							{
+								target = unit;
+								break;
+							}
+						}
+					}
+
+					if (weapon)
+					{
+						printf("Requesting...\n");
+						weapon->mReloadPaused = packet.reload_paused;
+						weapon->mRequireControlRelease = packet.require_control_release;
+						weapon->mCharging = packet.charging;
+						weapon->mLastFireTime = packet.last_fire_time;
+						weapon->mControlTime = packet.control_time;
+						weapon->mCooldownTimeRemaining = packet.cooldown_time_remaining;
+						weapon->mAmmo = packet.ammo;
+						weapon->mVolley = packet.volley;
+						weapon->mReloadTimeRemaining = packet.reload_time_remaining;
+						weapon->RequestFire(packet.angle, D3DXVECTOR2(packet.target_position_x, packet.target_position_y), target);
+					}
 				}
 			}));
 
-		network::client::callbacks.push_back(network::NetworkCallback("OnWeaponFire", [&](network::json j)
-			{
-				auto player_manager = engine::hades::PlayerManager::Instance();
-				auto controllable_unit = player_manager->players[0]->active_unit;
-				if (!controllable_unit)
-					return; // Validity check
-
-				int uuid = j["uid"];
-				auto client = network::GetPlayer(uuid);
-				if (client)
-				{
-					if (!client->character)
-						return; // Error!
-
-					auto unit_type = (engine::hades::Unit*)client->character;
-					int hash_id = j["weapon"];
-					auto hash = engine::misc::HashGuid(hash_id);
-					auto weapon = unit_type->GetArsenal()->GetWeapon(hash);
-					if (!weapon)
-						return; // Weapon does not exist? Maybe we did not copy arsenal?
-
-					float angle = j["angle"];
-					D3DXVECTOR2 fire_pos = D3DXVECTOR2(j["target_position_x"], j["target_position_y"]);
-					weapon->RequestFire(angle, fire_pos, nullptr);
-				}
-			}));
+		
 
 		/* Everything was initialized correctly! */
 		return true;

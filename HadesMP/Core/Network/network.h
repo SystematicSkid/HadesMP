@@ -3,47 +3,67 @@
 #include <iostream>
 #include <future>
 #include <ppl.h>
+#include <tuple>
 #include <concurrent_vector.h>
-
-#include "../3rdparty/json/json.h"
-#include "../3rdparty/json/fifo_map.h"
-
-#include "./defines.h"
-#include "./server.h"
-#include "./client.h"
 
 namespace core::network
 {
-	class NetworkPlayer
+	bool is_host = false;
+
+	struct NetworkCallback
 	{
-	public:
-		int uuid;
-		engine::misc::Color outline_color;
-		engine::hades::Thing* character;
-		std::string map;
+		NetworkCallback(packets::PacketType type, std::function<void(std::string)> callback) : type(type), callback(callback) {}
 
-		/* Unit Specific */
-		D3DXVECTOR2 network_position;
-		std::vector<int> weapons;
-
-	public:
-		NetworkPlayer() {}
-		NetworkPlayer(int uuid) : uuid(uuid)
-		{
-			this->outline_color = engine::misc::Color(255, 0, 0);
-		}
+		packets::PacketType type;
+		std::function<void(std::string data)> callback;
 	};
 
-	std::vector<NetworkPlayer*> network_players;
-
-	NetworkPlayer* GetPlayer(int uuid)
+	struct server_client
 	{
-		for (auto p : network_players)
-		{
-			printf("UID: %i\n", p->uuid);
-			if (p->uuid = uuid)
-				return p;
-		}
-		return nullptr;
-	}
+		unsigned int _uid;
+		unsigned int get_uid() const { return _uid; } //MUST return globally unique value here
+	};
+
+	class Server
+	{
+	public:
+		enetpp::trace_handler trace_handler;
+		enetpp::server<server_client> server;
+		std::mutex mutex;
+		concurrency::concurrent_vector<std::tuple<int, std::vector<enet_uint8>>> queue; //maybe use a map lol
+		concurrency::concurrent_vector<NetworkCallback> callbacks;
+
+	public:
+		std::unique_ptr<std::thread> Init();
+		void Thread();
+		void StartListening(const std::string& hostname, enet_uint16 port);
+		void StopListening();
+		void Send(int id, std::vector<enet_uint8> message);
+		void Invoke();
+		void OnSync(const std::string& name, std::function<void(std::string)> function);
+		void Consume();
+	};
+	extern Server server;
+
+	class Client
+	{
+	public:
+		enetpp::trace_handler trace_handler;
+		enetpp::client client;
+		std::mutex mutex;
+		concurrency::concurrent_vector<std::string> queue;
+		concurrency::concurrent_vector<NetworkCallback> callbacks;
+
+	public:
+		std::unique_ptr<std::thread> Init();
+		void Thread();
+		void Connect(const std::string& hostname, enet_uint16 port);
+		void Disconnect();
+		void Send(std::string message);
+		void Invoke();
+		void OnSync(const std::string& name, std::function<void(std::string)> function);
+		void Consume();
+	};
+
+	extern Client client;
 }

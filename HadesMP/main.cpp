@@ -6,6 +6,9 @@ HMODULE dll;
 Proxy proxy;
 HWND g_hwnd;
 
+core::network::Client core::network::client;
+core::network::Server core::network::server;
+
 void init()
 {
 	FILE* pNewStdout = NULL;

@@ -4,15 +4,13 @@ namespace engine::hades
 {
 	struct WeaponData : public engine::hades::GameData
 	{
-		BYTE mType[1];
+		std::vector<PVOID> mEffects;
+		engine::hades::WeaponType mType;
 		engine::misc::HashGuid mControl;
 		engine::misc::HashGuid mAlternateControl;
 		engine::misc::HashGuid mSecondaryControl;
 		engine::misc::HashGuid mDisallowedControl;
 		float mControlWindow;
-		bool mDefaultControl;
-		bool mLoseControlOnRelease;
-		bool mLoseControlIfNotCharging;
 		engine::misc::HashGuid mRemoveControlOnCharge;
 		engine::misc::HashGuid mRemoveControlOnCharge2;
 		engine::misc::HashGuid mRemoveControlOnCharge3;
@@ -28,16 +26,13 @@ namespace engine::hades
 		engine::misc::HashGuid mAddControlOnChargeCancel;
 		engine::misc::HashGuid mAddControlOnChargeCancel2;
 		engine::misc::HashGuid mRemoveAllControlSwaps;
-		bool mCancelChargeOnControlRemoved;
 		engine::misc::HashGuid mControlHelpTextId;
-		bool mEnabled;
 		engine::misc::HashGuid mPreFireAnimation;
 		engine::misc::HashGuid mFireGraphic;
 		engine::misc::HashGuid mFireEndGraphic;
 		engine::misc::HashGuid mFailedToFireCooldownAnimation;
 		float mFailedToFireCooldownDuration;
 		engine::misc::HashGuid mTriggerReleaseGraphic;
-		bool mAlwaysPlayTriggerReleaseAnim;
 		engine::misc::HashGuid mFireFx;
 		engine::misc::HashGuid mFireEndFx;
 		engine::misc::HashGuid mFireFx2;
@@ -45,8 +40,6 @@ namespace engine::hades
 		engine::misc::HashGuid mUnblockedBlinkFx;
 		engine::misc::HashGuid mClipStartFx;
 		engine::misc::SoundCue mFireSound;
-		bool mPlayFireSoundForPausedProjectiles;
-		bool mStopFireSoundOnClipEmpty;
 		float mInitialCooldown;
 		float mCooldown;
 		float mCooldownMin;
@@ -54,26 +47,17 @@ namespace engine::hades
 		float mBelowMinChargeCooldown;
 		int mClipSize;
 		float mClipRegenInterval;
-		bool mFullClipRegen;
-		bool mClipRegenOnRelease;
 		float mClipRegenIntervalReleased;
 		float mReloadTime;
 		float mReloadTimeMin;
 		float mReloadTimeMax;
-		bool mReloadOnRelease;
-		bool mReloadOnCreation;
-		bool mReloadOnTouchdown;
 		engine::misc::HashGuid mReloadGraphic;
 		engine::misc::HashGuid mReloadGraphicFinish;
 		engine::misc::HashGuid mReloadFx;
-		bool mUseReloadGraphic;
 		engine::misc::SoundCue mReloadSound;
 		engine::misc::HashGuid mProjectile;
 		int mNumProjectiles;
-		bool mRefreshProjectileOnFire;
 		float mBonusProjectileChance;
-		bool mNumProjectilesIsAmmo;
-		bool mTreatProjectilesAsUniqueVolleys;
 		float mProjectileOffsetStartDistance;
 		float mProjectileOffset;
 		float mProjectileAngleStartOffset;
@@ -95,13 +79,11 @@ namespace engine::hades
 		float mScatterSubside;
 		float mScatterCap;
 		float mBarrelLength;
-		bool mBarrelRequiresLoS;
 		float mFireOffsetX;
 		float mFireOffsetY;
 		float mInvulnerableImpactCheckOffset;
 		engine::misc::HashGuid mFireFromObstacle;
 		engine::misc::HashGuid mFireToObstacle;
-		bool mDestroyTargetedObstacle;
 		float mChargeTime;
 		int mChargeTimeFrames;
 		engine::misc::HashGuid mStoreChargeOnSwapFrom;
@@ -143,44 +125,22 @@ namespace engine::hades
 		float mDuration;
 		float mDisableOwnerForDuration;
 		int mDisableOwnerForDurationFrames;
-		bool mRootOwnerWhileFiring;
-		bool mBlockMoveInput;
 		float mRootOwnerWhileFiringDuration;
 		float mDisableAttackForDuration;
 		float mArsenalCooldown;
 		float mTriggerReleaseDisableDuration;
-		bool mIgnoreForceCooldown;
 		float mCooldownWeaponSlotThree;
-		bool mCanTargetSelf;
-		bool mUseTargetAngle;
-		bool mRestrictTargetAngleToAnim;
 		float mSpeedMultiplier;
 		int mStartingAmmo;
 		int mMaxAmmo;
 		engine::misc::HashGuid mShareAmmoWeapon;
-		bool mSpendAmmoPerProjectile;
-		bool mCancelAttachedProjectiles;
-		bool mTriggersStoredAmmoVulnerability;
-		bool mFireOnRelease;
-		bool mForceMaxChargeRelease;
-		bool mCancelChargeOnRelease;
-		bool mForceReleaseOnFail;
-		bool mForceReleaseOnSwap;
-		bool mForceReleaseOnFire;
 		engine::misc::HashGuid mForceReleaseWeaponOnFire;
 		engine::misc::HashGuid mClearWeaponFireRequestOnFire;
-		bool mForceReleaseAllOnFire;
-		bool mAllowExternalForceRelease;
-		bool mAllowExternalForceReleaseIfMinCharged;
-		bool mAllowExternalForceReleaseIfAnyCharged;
-		bool mCancelFireOnExternalForceRelease;
 		engine::misc::HashGuid mSwapOnRelease;
 		engine::misc::HashGuid mSwapOnFire;
 		engine::misc::HashGuid mAddOnFire;
 		engine::misc::HashGuid mSwapOnReloadFinish;
 		float mMinChargeToFire;
-		bool mTriggerTapIgnoresCooldown;
-		bool mFullyAutomatic;
 		engine::misc::HashGuid mPostFireWeapon;
 		float mPostFireWeaponWindow;
 		engine::misc::HashGuid mCollisionWeapon;
@@ -191,28 +151,93 @@ namespace engine::hades
 		float mChargeRumbleRight;
 		float mScreenShakeSpeed;
 		float mBarrelArcLimit;
-		bool mOnlyChargeOnce;
 		float mWeaponRange;
 		float mMinRange;
-		bool mAutoLock;
-		bool mAutoLockWithMouse;
-		bool mAutoLockUseMouseOver;
 		float mAutoLockRange;
 		float mAutoLockArcDistance;
-		bool mCanAutoLockUnits;
-		bool mCanAutoLockInteractable;
-		bool mCanAutoLockFriends;
 		engine::misc::HashGuid mAutoLockIgnore;
-		bool mManualAiming;
 		float mManualAimingInitialOffset;
-		bool mManualAimingRequireValidLocation;
-		bool mShowFreeAimLine;
 		float mAimArcInterval;
 		engine::misc::HashGuid mAimLineAnimation;
 		engine::misc::HashGuid mTargetReticleAnimation;
 		float mTargetReticleOffset;
-		bool mRotateTargetReticle;
 		float mMouseApproachRange;
+		float mMinFireZ;
+		float mMaxFireZ;
+		float mMaxSelfVelocityZ;
+		float mAllEffectsProcChance;
+		float mObstacleDamageMultiplier;
+		float mDamageMultiplier;
+		engine::misc::HashGuid mCancelledRamWeapon;
+		float mBlinkDuration;
+		float mBlinkEaseIn;
+		float mBlinkEaseOut;
+		float mBlinkMaxRange;
+		float mBlinkDetonateAtEndpointDelay;
+		float mBlinkDetonateOnInterval;
+		float mBlinkNumGhosts;
+		engine::misc::HashGuid mPostBlinkAnim;
+		engine::misc::HashGuid mBlinkGhostAnimation;
+		float mBlinkCameraLerpTime;
+		float mSpawnOnDetonateInterval;
+		float mRamMinVelocity;
+		float mRamTotalDistance;
+		float mRamEndVelocity;
+		float mRamDistanceInterval;
+		float mFlashDuration;
+		float mCheckMovementReactionDistance;
+		bool mDefaultControl;
+		bool mLoseControlOnRelease;
+		bool mLoseControlIfNotCharging;
+		bool mCancelChargeOnControlRemoved;
+		bool mEnabled;
+		bool mAlwaysPlayTriggerReleaseAnim;
+		bool mPlayFireSoundForPausedProjectiles;
+		bool mStopFireSoundOnClipEmpty;
+		bool mFullClipRegen;
+		bool mClipRegenOnRelease;
+		bool mReloadOnRelease;
+		bool mReloadOnCreation;
+		bool mReloadOnTouchdown;
+		bool mUseReloadGraphic;
+		bool mRefreshProjectileOnFire;
+		bool mNumProjectilesIsAmmo;
+		bool mTreatProjectilesAsUniqueVolleys;
+		bool mBarrelRequiresLoS;
+		bool mDestroyTargetedObstacle;
+		bool mRootOwnerWhileFiring;
+		bool mBlockMoveInput;
+		bool mIgnoreForceCooldown;
+		bool mCanTargetSelf;
+		bool mUseTargetAngle;
+		bool mRestrictTargetAngleToAnim;
+		bool mSpendAmmoPerProjectile;
+		bool mCancelAttachedProjectiles;
+		bool mTriggersStoredAmmoVulnerability;
+		bool mFireOnRelease;
+		bool mForceMaxChargeRelease;
+		bool mCancelChargeOnRelease;
+		bool mForceReleaseOnFail;
+		bool mForceReleaseOnSwap;
+		bool mForceReleaseOnFire;
+		bool mForceReleaseAllOnFire;
+		bool mAllowExternalForceRelease;
+		bool mAllowExternalForceReleaseIfMinCharged;
+		bool mAllowExternalForceReleaseIfAnyCharged;
+		bool mCancelFireOnExternalForceRelease;
+		bool mTriggerTapIgnoresCooldown;
+		bool mFullyAutomatic;
+		bool mOnlyChargeOnce;
+		bool mAutoLock;
+		bool mAutoLockWithMouse;
+		bool mAutoLockUseMouseOver;
+		bool mCanAutoLockUnits;
+		bool mCanAutoLockInteractable;
+		bool mCanAutoLockFriends;
+		bool mManualAiming;
+		bool mManualAimingRequireValidLocation;
+		bool mShowFreeAimLine;
+		bool mRotateTargetReticle;
 		bool mReloadOnEquip;
 		bool mLockTrigger;
 		bool mLockTriggerForClip;
@@ -225,14 +250,8 @@ namespace engine::hades
 		bool mClearFireRequestOnChargeCancel;
 		bool mAllowMultiFireRequest;
 		bool mPriorityFireRequest;
-		float mMinFireZ;
-		float mMaxFireZ;
-		float mMaxSelfVelocityZ;
-		float mAllEffectsProcChance;
 		bool mSilentImpact;
 		bool mSilentImpactAfterFirst;
-		float mObstacleDamageMultiplier;
-		float mDamageMultiplier;
 		bool mRandomFireAngle;
 		bool mFireAtAttackTarget;
 		bool mCancelMovement;
@@ -252,32 +271,13 @@ namespace engine::hades
 		bool mCanCancelRotateDisables;
 		bool mCancelRamWeaponOnCharge;
 		bool mCancelRamWeaponOnFire;
-		engine::misc::HashGuid mCancelledRamWeapon;
-		float mBlinkDuration;
-		float mBlinkEaseIn;
-		float mBlinkEaseOut;
-		float mBlinkMaxRange;
 		bool mBlinkDetonateAtOrigin;
 		bool mBlinkDetonateAtEndpoint;
-		float mBlinkDetonateAtEndpointDelay;
-		float mBlinkDetonateOnInterval;
-		float mBlinkNumGhosts;
-		engine::misc::HashGuid mPostBlinkAnim;
 		bool mCanUseKeyboardAim;
-		engine::misc::HashGuid mBlinkGhostAnimation;
-		float mBlinkCameraLerpTime;
-		float mSpawnOnDetonateInterval;
-		float mRamMinVelocity;
 		bool mRamReappliesVelocity;
-		float mRamTotalDistance;
-		float mRamEndVelocity;
-		float mRamDistanceInterval;
-		float mFlashDuration;
 		bool mOwnerFaceProjectile;
-		float mCheckMovementReactionDistance;
 		bool mCheckDanger;
 		bool mDestroySpawnsOnUnequip;
-		std::vector<DWORD64> effects;
 	};
 
 	class Weapon : public engine::Rtti
@@ -309,6 +309,23 @@ namespace engine::hades
 		WeaponData* pData;
 		Weapon* pGainedControlFrom;
 		std::vector<int> mSpawnedIds;
+		std::optional<PVOID> mCurrentFireRequest;
+		std::optional<PVOID> mPrevFireRequest;
+		std::basic_string<char> mOverrideWeaponFire;
+		bool mValidProjectileData;
+		bool mValidSpawnedProjectileData;
+		bool mPerfectChargeLocked;
+		bool mIsDisposed;
+		float mNextClipRegenTime;
+		float mCritBonusChance;
+		float mAdditiveDamageMultiplier;
+		float mReloadTimeRemaining;
+		float mScatter;
+		float mBlastRadiusModifier;
+		int mCritBonusRemaining;
+		int mClipShotsRemaining;
+		int mAdditiveDamageBonusRemaining;
+		int mFireSound;
 		// TODO: Finish this!
 
 	public:
@@ -349,6 +366,41 @@ namespace engine::hades
 			return static_cast<void(__fastcall*)(Weapon*)>((PVOID)engine::addresses::weapon::functions::post_fire)(this);
 		}
 
+		bool MustReleaseTrigger()
+		{
+			return reinterpret_cast<bool(__fastcall*)(Weapon*)>(engine::addresses::weapon::functions::must_release_trigger)(this);
+		}
+
+		bool HasAmmo()
+		{
+			return reinterpret_cast<bool(__fastcall*)(Weapon*)>(engine::addresses::weapon::functions::has_ammo)(this);
+		}
+
+		bool IsReadyToFire()
+		{
+			if	(!this->pData->mEnabled || this->MustReleaseTrigger() 
+				//|| !this->HasAmmo() && !this->pData->mFailedToFireCooldownAnimation.id
+				//|| this->pData->mClipSize && !this->mClipShotsRemaining
+				//|| this->pData->mIgnoreTriggerLockDuringCooldown && this->mCooldownTimeRemaining > 0.f)
+				)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		void SetEffectProperty(const char* effect_name, const char* property_name, engine::misc::any* val, engine::Reflection_ValueChangeType change_type)
+		{
+			return reinterpret_cast<void(__fastcall*)(Weapon*, const char*, const char*, engine::misc::any*, engine::Reflection_ValueChangeType)>(engine::addresses::weapon::functions::set_effect_property)
+				(this, effect_name, property_name, val, change_type);
+		}
+
+		void SetProjectileProperty(const char* name, engine::misc::any* val, engine::Reflection_ValueChangeType change_type)
+		{
+			return reinterpret_cast<void(__fastcall*)(Weapon*, const char*, engine::misc::any*, engine::Reflection_ValueChangeType)>(engine::addresses::weapon::functions::set_projectile_property)
+				(this, name, val, change_type);
+		}
+
 		static Weapon* Create(engine::misc::HashGuid name, engine::hades::Unit* owner)
 		{
 			return static_cast<Weapon * (__fastcall*)(engine::misc::HashGuid, engine::hades::Unit*)>((PVOID)engine::addresses::weapon::functions::create_hash)
@@ -385,6 +437,20 @@ namespace engine::hades
 				if(weapon && weapon->pData)
 					ret.push_back(weapon->pData->name.id);
 			return ret;
+		}
+
+		void DumpWeapons()
+		{
+			printf("[=] Arsenal Weapons\n");
+			for (auto weapon : mWeapons)
+			{
+				printf("\t%s\n", weapon->pData->name.ToString());
+			}
+			printf("[=] Controllable Weapons\n");
+			for (auto weapon : mControllableWeapons)
+			{
+				printf("\t%s\n", weapon->pData->name.ToString());
+			}
 		}
 
 		void AddWeaponControl(Weapon* weapon)

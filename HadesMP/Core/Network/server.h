@@ -1,23 +1,7 @@
-#include "defines.h"
+#pragma once
 
-#include <iostream>
-#include <string>
-#include <thread>
-
-#define ENET_IMPLEMENTATION
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
-#include <enet/include/enet.h>
-#include <enetpp/include/server.h>
-
-namespace core::network::server
+namespace core::network
 {
-	enetpp::trace_handler trace_handler;
-	enetpp::server<server_client> server;
-	std::mutex mutex;
-	concurrency::concurrent_vector<json> queue;
-	concurrency::concurrent_vector<NetworkCallback> callbacks;
-
 
 	unsigned int next_uid = 1;
 	inline auto init_client_func = [&](server_client& client, const char* ip)
@@ -26,101 +10,24 @@ namespace core::network::server
 		next_uid++;
 	};
 
-
-	void StartListening(const std::string& hostname, enet_uint16 port)
+	void serverthreadfunc()
 	{
-		server.start_listening(enetpp::server_listen_params<server_client>()
-			.set_channel_count(1)
-			.set_max_client_count(0xFFF)
-			.set_incoming_bandwidth(0)
-			.set_outgoing_bandwidth(0)
-			.set_listen_port(port)
-			.set_initialize_client_function(init_client_func));
+		server.Thread();
 	}
 
-	void Send(int id, const std::string& to, json message)
+	std::unique_ptr<std::thread> Server::Init()
 	{
-		queue.push_back(json{ id, json{ to, message } });
-	}
-	void Send(int id, const std::string& to, const std::string& message)
-	{
-		queue.push_back(json{ id, json{ to, message } });
+		return std::make_unique<std::thread>(&serverthreadfunc);
 	}
 
-	void Consume()
-	{
-		static auto on_connected = [=](server_client& client)
-		{
-			trace_handler("on_connected");
-
-			for (auto c : server.get_connected_clients())
-				Send(c->get_uid(), "JoinMSGPacket", json{ std::string(std::to_string(client.get_uid()) + " has joined.") });
-
-			//connected = true;
-		};
-
-		static auto on_disconnected = [=](unsigned int client_uid)
-		{
-			trace_handler("on_disconnected");
-		};
-
-		static auto on_data_received = [=](server_client& client, const enet_uint8* data, size_t data_size)
-		{
-			try
-			{
-				json j_from_cbor = json::from_cbor(data, data + data_size);
-
-				std::string callback_name = j_from_cbor[0];
-
-				json message = j_from_cbor[1];
-
-				for (auto& callback : callbacks)
-				{
-					if (callback.name == callback_name)
-						callback.callback(message);
-				}
-			}
-			catch (std::exception& e)
-			{
-				MessageBoxA(NULL, e.what(), e.what(), NULL);
-			}
-		};
-
-		server.consume_events(on_connected, on_disconnected, on_data_received);
-	}
-
-	void Invoke()
-	{
-		while (server.is_listening())
-		{
-			if (!server.get_connected_clients().empty())
-			{
-				for (auto& msg : queue)
-				{
-					auto cbor = json::to_cbor(msg[1]);
-
-					if (cbor.data())
-						server.send_packet_to(msg[0], 0, reinterpret_cast<const enet_uint8*>(cbor.data()), cbor.size(), ENET_PACKET_FLAG_RELIABLE);
-				}
-
-				queue = concurrency::concurrent_vector<json>{};
-				//queue.clear();
-			}
-
-			Consume();
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
-	}
-
-	void Thread()
+	void Server::Thread()
 	{
 		enetpp::global_state::get().initialize();
 
 		trace_handler = [&](const std::string& msg)
 		{
 			std::lock_guard<std::mutex> lock(mutex);
-			std::cout << "server: " << msg << "\n";
+			printf("server: %s\n", msg.c_str());
 		};
 
 		server.set_trace_handler(trace_handler);
@@ -132,24 +39,123 @@ namespace core::network::server
 		std::terminate();
 	}
 
-	std::unique_ptr<std::thread> Init()
+	void Server::StartListening(const std::string& hostname, enet_uint16 port)
 	{
-		return std::make_unique<std::thread>(&Thread);
+		server.start_listening(enetpp::server_listen_params<server_client>()
+			.set_channel_count(1)
+			.set_max_client_count(0xFFF)
+			.set_incoming_bandwidth(0)
+			.set_outgoing_bandwidth(0)
+			.set_listen_port(port)
+			.set_initialize_client_function(init_client_func));
 	}
-	
-	void StopListening()
+
+	void Server::StopListening()
 	{
+		//connected = false;
+
 		server.stop_listening();
 	}
-	
-	void OnSync(const std::string& name, std::function<void(json)> function)
+
+	void Server::Send(int id, std::vector<enet_uint8> message)
 	{
-		std::promise<json> promise;
+		queue.push_back(std::tuple<int, std::vector<enet_uint8>>(id, message));
+	}
+
+	void Server::Consume()
+	{
+		static auto on_connected = [this](server_client& client)
+		{
+			trace_handler("on_connected");
+			network::is_host = true;
+			//for (auto c : server.get_connected_clients())
+				//Send(c->get_uid(), "JoinMSGPacket", json{std::string(std::to_string(client.get_uid()) + " has joined.")});
+
+			//connected = true;
+		};
+
+		static auto on_disconnected = [this](unsigned int client_uid)
+		{
+			trace_handler("on_disconnected");
+		};
+
+		static auto on_data_received = [this](server_client& client, const enet_uint8* data, size_t data_size)
+		{
+			try
+			{
+				auto handle = msgpack::unpack((char*)data, data_size);
+				auto msg = handle.get();
+
+				auto base_packet = msg.as<packets::Packet>();
+
+				//printf("[Server] Received packet: %i\n", base_packet.type);
+
+				std::vector<enet_uint8> send_data;
+				for (int i = 0; i < data_size; i++)
+					send_data.push_back(data[i]);
+
+				/* Relay back to clients */
+				for (auto& c : this->server.get_connected_clients())
+				{
+					if (c->get_uid() == client.get_uid())
+						continue;
+					this->Send(c->get_uid(), send_data);
+				}
+
+				/*std::tuple<std::string, std::string> prototype;
+				auto prelude = msg.convert(prototype);
+
+				std::string callback_name = std::get<0>(prelude);
+				std::string data = std::get<1>(prelude);
+
+				for (auto& callback : callbacks)
+				{
+					if (callback.name == callback_name)
+						callback.callback(data);
+				}*/
+			}
+			catch (std::exception& e)
+			{
+				printf("Server error\n");
+				MessageBoxA(NULL, e.what(), e.what(), NULL);
+			}
+		};
+
+		server.consume_events(on_connected, on_disconnected, on_data_received);
+	}
+
+	// on sync will wait til it receives some sort of response (blocking)
+	void Server::OnSync(const std::string& name, std::function<void(std::string)> function)
+	{
+		/*std::promise<json> promise;
 
 		callbacks.push_back(NetworkCallback(name, [&](json message) { promise.set_value(message); }));
 
 		std::future<json> future = promise.get_future();
 
-		function(future.get());
+		function(future.get());*/
+	}
+
+	void Server::Invoke()
+	{
+		while (server.is_listening())
+		{
+			if (!server.get_connected_clients().empty())
+			{
+				for (auto& msg : queue)
+				{
+					int id = std::get<0>(msg);
+					std::vector<enet_uint8> packet = std::get<1>(msg);
+					if (!packet.empty())
+						server.send_packet_to(id, 0, reinterpret_cast<const enet_uint8*>(packet.data()), packet.size(), ENET_PACKET_FLAG_RELIABLE);
+				}
+
+				//queue = concurrency::concurrent_vector<json>{};
+				queue.clear();
+			}
+
+			Consume();
+
+		}
 	}
 }

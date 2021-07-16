@@ -3,11 +3,6 @@
 #include <minhook/include/MinHook.h>
 #include <any>
 
-/*
-	This entire file is pretty ugly simply because
-	I did not want to include an external hooking library
-*/
-
 namespace core::hooks
 {
 	std::function<void(engine::App*, float)> on_update = nullptr;
@@ -28,8 +23,10 @@ namespace core::hooks
 	PVOID original_create_player = nullptr;
 	engine::hades::Thing* __fastcall hook_create_player_unit(engine::hades::UnitData* unitdata, D3DXVECTOR2 location, engine::hades::MapThing* map_thing, bool do_presentation, bool needs_lua_init)
 	{
+
 		if (!has_loaded_player)
 		{
+			/* This is our localplayer loading in */
 			// Allocate new memory space for our copy of UnitData
 			global::new_unit_data = (engine::hades::UnitData*)malloc(sizeof engine::hades::UnitData);
 			// Copy all existing bytes to our new pointer
@@ -74,15 +71,17 @@ namespace core::hooks
 		{
 			// This is a call from our internal module
 			// ... do nothing
-			// Reset the flag for next call
-			has_loaded_player = false;
+			// Reset the flag for next call -- Note: This is not required if we hook `load_next_map`
+			//has_loaded_player = false;
 		}
 
 		auto ret = static_cast<engine::hades::Thing * (__fastcall*)(engine::hades::UnitData*, D3DXVECTOR2, engine::hades::MapThing*, bool, bool)>
 			(original_create_player)(unitdata, location, map_thing, do_presentation, needs_lua_init);
 		if (!global::original_unit)
+		{
+
 			global::original_unit = ret;
-		printf("Return: 0x%p\n", ret);
+		}
 
 		return ret;
 	}
@@ -91,8 +90,32 @@ namespace core::hooks
 	bool __fastcall hook_request_fire(engine::hades::Weapon* weapon, float angle, D3DXVECTOR2 target_location, engine::hades::Thing* target)
 	{
 		auto player_manager = engine::hades::PlayerManager::Instance();
-		auto controllable_unit = player_manager->players[0]->active_unit;
-		if (weapon->mOwnerId == controllable_unit->mId) // This is a local attack
+		auto controllable_unit = (engine::hades::Unit*)player_manager->players[0]->active_unit;
+		
+		//printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
+		
+		int weapon_id = weapon->pData->name.id;
+		printf("Weapon %s\n", weapon->pData->name.ToString());
+		/* Localplayer attack */
+		if (weapon->mOwnerId == controllable_unit->mId)
+		{
+			/* Tell replicated unit to attack */
+			//engine::hades::Weapon* repl_weapon = global::replicated_unit->arsenal.GetWeapon(weapon->pData->name);
+			//if(repl_weapon)
+			//	repl_weapon->RequestFire(global::replicated_unit->GetAngle(target_location), target_location, target);
+			if(weapon->IsReadyToFire() && controllable_unit->IsReadyToFire())
+			{
+				msgpack::zone z;
+				/* Send attack packet */
+				network::packets::AttackPacket attack_packet(weapon, angle, target_location, target);
+				network::packets::Packet packet(network::packets::PacketType::OnAttack, msgpack::object(attack_packet, z));
+				std::stringstream ss;
+				msgpack::pack(ss, packet);
+				network::client.Send(ss.str());
+			}
+		}
+
+		/*if (weapon->mOwnerId == controllable_unit->mId) // This is a local attack
 		{
 			network::json j;
 			j["uid"] = network::client::uuid;
@@ -105,8 +128,7 @@ namespace core::hooks
 
 			// Send our packet to the server
 			//network::client::Send("OnWeaponFire", j);
-		}
-		//printf("Weapon: %s\nAngle: %f\nLocation: %f %f\nTarget: 0x%p\n", weapon->pData->name.ToString(), angle, target_location.x, target_location.y, target);
+		}*/
 		//if (weapon->pGainedControlFrom)
 		//	printf("Owner: %s\nReturn: 0x%p\n", weapon->pGainedControlFrom->pData->name.ToString(), _ReturnAddress());
 		return static_cast<bool(__fastcall*)(engine::hades::Weapon*, float, D3DXVECTOR2, engine::hades::Thing*)>(original_request_fire)(weapon, angle, target_location, target);
@@ -119,6 +141,7 @@ namespace core::hooks
 		/* Reset our unit pointers */
 		global::original_unit = nullptr;
 		global::replicated_unit = nullptr;
+		//printf("Loading map: %s\n", map_name->c_str());
 		return static_cast<void(__fastcall*)(engine::hades::World*, std::string*, int, engine::misc::Color)>(original_load_next_map)(world, map_name, request, loading_bg_color);
 	}
 
@@ -147,42 +170,128 @@ namespace core::hooks
 	}
 
 	PVOID original_set_effect = nullptr;
-	void __fastcall hook_set_effect(engine::hades::Weapon* weapon, const char* effect_name, const char* property_name, std::any* val, engine::Reflection_ValueChangeType change_type)
+	void __fastcall hook_set_effect(engine::hades::Weapon* weapon, const char* effect_name, const char* property_name, engine::misc::any* val, engine::Reflection_ValueChangeType change_type)
 	{
+		printf("Set effect\n");
 		//printf("Replicated: 0x%p\n", global::replicated_unit);
-		if (weapon && weapon->pData)
+		static ptr any_type = Memory::SigScan("48 83 EC 38 48 C7 44 24 ? ? ? ? ? 48 8B 41 20 48 85 C0 74 12");
+		static ptr any_float = Memory::GetCallAddress("E8 ? ? ? ? E9 ? ? ? ? 48 8D 53 10");
+		auto player_manager = engine::hades::PlayerManager::Instance();
+		auto controllable_unit = (engine::hades::Unit*)player_manager->players[0]->active_unit;
+
+		if (global::replicated_unit && weapon && weapon->pData && weapon->mOwnerId == controllable_unit->mId)
 		{
-			//printf("weapon: %s\n", weapon->pData->name.ToString());
-			//printf("Effect: %s:%s\n", effect_name, property_name);
-			//printf("Type: 0x%p\n\n", change_type);
-			//printf("Val: 0x%p\n", *val);
+			auto* repl_weapon = global::replicated_unit->arsenal.GetWeapon(weapon->pData->name);
+			if (repl_weapon)
+			{
+				repl_weapon->SetEffectProperty(effect_name, property_name, val, change_type);
+			}
 		}
-		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, const char*, std::any*, engine::Reflection_ValueChangeType)>(original_set_effect)
+		/*if (weapon && weapon->pData)
+		{
+			printf("weapon: %s\n", weapon->pData->name.ToString());
+			printf("Effect: %s:%s\n", effect_name, property_name);
+			const type_info* val_type = reinterpret_cast<const type_info * (__fastcall*)(engine::misc::any*)>(any_type)(val);
+			printf("Type: 0x%p %s\n", change_type, val_type->name());
+			if(val->is_float())
+				printf("Val: %f\n", *val->get_float());
+		}*/
+		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, const char*, engine::misc::any*, engine::Reflection_ValueChangeType)>(original_set_effect)
 			(weapon, effect_name, property_name, val, change_type);
 	}
 
 	PVOID original_set_data = nullptr;
-	void __fastcall hook_set_data(engine::hades::Weapon* weapon, const char* name, std::any* val, int change_type)
+	void __fastcall hook_set_data(engine::hades::Weapon* weapon, const char* name, engine::misc::any* val, int change_type)
 	{
 		//printf("Replicated: 0x%p\n", global::replicated_unit);
 
-		if (weapon && weapon->pData)
+		/*if (weapon && weapon->pData)
 		{
-			//printf("Weapon: %s\n", weapon->pData->name.ToString());
-			//printf("Property: %s\n", name);
-			//printf("Type: 0x%p\n", change_type);
+			printf("Weapon: %s\n", weapon->pData->name.ToString());
+			printf("Property: %s\n", name);
+			printf("Type: 0x%p\n", change_type);
+			if (val->is_float())
+				printf("Val: %f\n", *val->get_float());
 			//printf("Val: 0x%p\n", *val);
+		}*/
+		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, engine::misc::any*, int)>(original_set_data)(weapon, name, val, change_type);
+	}
+
+	PVOID original_set_projectile_property = nullptr;
+	void __fastcall hook_set_projectile_property(engine::hades::Weapon* weapon, const char* name, engine::misc::any* val, engine::Reflection_ValueChangeType change_type)
+	{
+		printf("Projectile Property\n");
+		printf("\t%s\n", name);
+		if (val->is_float())
+			printf("\t%f\n", *val->get_float());
+
+		auto player_manager = engine::hades::PlayerManager::Instance();
+		auto controllable_unit = (engine::hades::Unit*)player_manager->players[0]->active_unit;
+
+		if (global::replicated_unit && weapon && weapon->pData && weapon->mOwnerId == controllable_unit->mId)
+		{
+			auto* repl_weapon = global::replicated_unit->arsenal.GetWeapon(weapon->pData->name);
+			if (repl_weapon)
+			{
+				printf("replicating\n");
+				repl_weapon->SetProjectileProperty(name, val, change_type);
+			}
 		}
-		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, std::any*, int)>(original_set_data)(weapon, name, val, change_type);
+
+		return static_cast<void(__fastcall*)(engine::hades::Weapon*, const char*, engine::misc::any*, engine::Reflection_ValueChangeType)>(original_set_projectile_property)
+			(weapon, name, val, change_type);
 	}
 
 
-	PVOID original_set_seed = nullptr;
-	DWORD64 __fastcall hook_seed(int seed, int id)
+	PVOID original_find_lock = nullptr;
+	DWORD64 __fastcall hook_find_lock(PVOID playerinput, float max_range, float max_arc_dist, float custom_angle, bool can_target_units, bool can_target_friends, bool require_line_of_sight, const char* ignore_name)
 	{
 		//seed = 2002100;
 		//id = 0;
-		return static_cast<DWORD64(__fastcall*)(int, int)>(original_set_seed)(seed, id);
+		return static_cast<DWORD64(__fastcall*)(PVOID, float,float,float,bool,bool,bool, const char*)>(original_find_lock)
+			(playerinput, max_range * 2.f, max_arc_dist * 4.f, 75.f, true,false,false, ignore_name);
+	}
+
+	PVOID original_get_crit = nullptr;
+	float __fastcall hook_get_crit_chance(engine::hades::Unit* unit, float base_chance, engine::hades::Unit* target)
+	{
+		if(unit == engine::hades::PlayerManager::Instance()->players[0]->active_unit)
+			return 1.f;
+		return static_cast<float(__fastcall*)(engine::hades::Unit*, float, engine::hades::Unit*)>(original_get_crit)(unit, base_chance, target);
+	}
+
+	PVOID original_create_enemy_unit = nullptr;
+	engine::hades::Unit* __fastcall hook_create_enemy_unit(engine::hades::UnitData* unit_data, D3DXVECTOR2 location, engine::hades::MapThing* map_thing, std::vector<engine::hades::MapThingGroupId>* group_names,
+		const engine::hades::MapThingGroupId* first_group_name, bool do_active_presentation, bool needs_lua_init, engine::hades::Unit* spawned_by)
+	{
+		bool is_host = network::is_host;
+		/* Get original unit created */
+		engine::hades::Unit* unit = reinterpret_cast<engine::hades::Unit * (__fastcall*)(engine::hades::UnitData*, D3DXVECTOR2, engine::hades::MapThing*, std::vector<engine::hades::MapThingGroupId>*,
+			const engine::hades::MapThingGroupId*, bool, bool, engine::hades::Unit*)>(original_create_enemy_unit)(unit_data, location, map_thing, group_names,
+				first_group_name, do_active_presentation, needs_lua_init, spawned_by);
+		if (is_host)
+		{
+			printf("Spawning enemy unit: %s\n", unit_data->name.ToString());
+
+			/* Send enemy spawn packet */
+			msgpack::zone z;
+			network::packets::AddEnemyPacket add_enemy_packet(unit, location);
+			network::packets::Packet packet(network::packets::PacketType::OnAddEnemy, msgpack::object(add_enemy_packet, z));
+			std::stringstream ss;
+			msgpack::pack(ss, packet);
+			network::client.Send(ss.str());
+		}
+		else
+			unit->Delete();// Delete unit if not host, await server entity creation packet
+		return unit;
+	}
+
+	PVOID original_handle_input = nullptr;
+	void __fastcall hook_handle_input(PVOID thisptr, float dt, PVOID input_handler)
+	{
+		printf("Input %f\n", dt);
+		printf("\t0x%p\n", input_handler);
+		return reinterpret_cast<void(__fastcall*)(PVOID, float, PVOID)>(original_handle_input)(thisptr, dt, input_handler);
 	}
 
 	void hook(DWORD64 address, DWORD64 callback, PVOID* original, int length)
@@ -240,15 +349,27 @@ namespace core::hooks
 		MH_CreateHook((PVOID)engine::addresses::gameplayscreen::functions::draw, &hook_gameplayscreen_draw, &original_draw);
 		MH_EnableHook((PVOID)engine::addresses::gameplayscreen::functions::draw);
 
-		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_effect_property, &hook_set_effect, &original_set_effect);
+		/*MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_effect_property, &hook_set_effect, &original_set_effect);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_effect_property);
 
 		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_data_property, &hook_set_data, &original_set_data);
 		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_data_property);
 
-		PVOID hook_address = (PVOID)Memory::SigScan("48 83 EC 28 83 FA 01 75 0B");
-		MH_CreateHook(hook_address, &hook_seed, &original_set_seed);
-		MH_EnableHook(hook_address);
+		MH_CreateHook((PVOID)engine::addresses::weapon::functions::set_projectile_property, &hook_set_projectile_property, &original_set_projectile_property);
+		MH_EnableHook((PVOID)engine::addresses::weapon::functions::set_projectile_property);*/
+
+		MH_CreateHook((PVOID)engine::addresses::unitmanager::functions::create_enemy_unit, &hook_create_enemy_unit, &original_create_enemy_unit);
+		MH_EnableHook((PVOID)engine::addresses::unitmanager::functions::create_enemy_unit);
+
+		//MH_CreateHook((PVOID)engine::addresses::playerunit::functions::handle_input, &hook_handle_input, &original_handle_input);
+		//MH_EnableHook((PVOID)engine::addresses::playerunit::functions::handle_input);
+
+		PVOID hook_address = (PVOID)Memory::GetCallAddress("E8 ? ? ? ? 48 85 C0 74 1D 48 8D 55 B7");
+		//MH_CreateHook(hook_address, &hook_find_lock, &original_find_lock);
+		//MH_EnableHook(hook_address);
+		//PVOID crit_address = (PVOID)Memory::SigScan("48 8B 81 ? ? ? ? 4D 8B D8");
+		//MH_CreateHook(crit_address, &hook_get_crit_chance, &original_get_crit);
+		//MH_EnableHook(crit_address);
 		//MH_CreateHook((PVOID)engine::addresses::unit::functions::has_same_team, &hook_has_same_team, &original_check_team);
 		//MH_EnableHook((PVOID)engine::addresses::unit::functions::has_same_team);
 		// Script load hook

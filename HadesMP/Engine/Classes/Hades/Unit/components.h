@@ -13,6 +13,7 @@ namespace engine::hades
 
 	class BodyComponent : public IThingComponent
 	{
+	public:
 		std::vector<PVOID> active_transitions; // BodyComponentTransitionHelper
 		float mScale;
 		float mSquashStretchScale;

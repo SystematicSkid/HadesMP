@@ -2,6 +2,9 @@
 
 namespace engine::hades
 {
+	struct MapThing;
+	struct MapThingGroupId;
+
 	struct __declspec(align(0x8)) ThingData
 	{
 		bool created;
@@ -187,53 +190,50 @@ namespace engine::hades
 		float mElapsedTimeMultiplier;
 		float mSpawnTime;
 		D3DXVECTOR2 location;
-		D3DXVECTOR2 spawn_location;
-		engine::misc::IRectangle rectangle;
-		D3DXVECTOR3 direction;
-		ThingData* thing_data;
-		BodyComponent* body;
-		LifeComponent* pLife;
-		PhysicsComponent* pPhysics;
-		VacuumComponent* pVacuum;
-		MagnetismComponent* pMagnetism;
-		DWORD64 pLightOccluder;
-		TranslateComponent* pTranslate;
-		PlayerNearbyComponent* pPlayerNearby;
-		FlashComponent* pFlash;
-		ShakeComponent* pShake;
-		DWORD64 pText;
-		DWORD64 pMetering;
-		DWORD64 pSpeech;
-		DWORD64 pInteraction;
-		AnimationData* pAnim;
-		EntityLinkedObjectThing mAttachedTo;
+		D3DXVECTOR2 mSpawnLocation;
+		engine::misc::IRectangle mRectangle;
+		D3DXVECTOR3 mDirection;
+		ThingData* pThingData;
+		engine::hades::BodyComponent* pBody;
+		engine::hades::LifeComponent* pLife;
+		engine::hades::PhysicsComponent* pPhysics;
+		engine::hades::VacuumComponent* pVacuum;
+		engine::hades::MagnetismComponent* pMagnetism;
+		DWORD64* pOccluder;
+		engine::hades::TranslateComponent* pTranslate;
+		engine::hades::PlayerNearbyComponent* pPlayerNearby;
+		engine::hades::FlashComponent* pFlash;
+		engine::hades::ShakeComponent* pShake;
+		DWORD64* pText;
+		DWORD64* pMetering;
+		DWORD64* pSpeech;
+		DWORD64* pInteraction;
+		engine::hades::Animation* pAnim;
+		char pad_01[0x10];
 		LuaTable mAttachedLua;
 		std::vector<int> mGridSquares;
 		std::vector<int> mAttachmentIds;
-		std::vector<Animation*> mFrontAnims;
-		std::vector<Animation*> mBackAnims;
-		std::optional<Polygon> mGeometry;
-		DWORD64 pLight;
+		std::vector<engine::hades::Animation*> mFrontAnims;
+		std::vector<engine::hades::Animation*> mBackAnims;
+		char pad_00[0x38];
+		DWORD64* pLight;
 		D3DXVECTOR2 mAttachOffset;
-		std::string mAsString;
+		std::basic_string<char> mAsString;
 		bool mUseScreenLocation;
 		bool mFixGeometryWithZ;
-		bool padding0[2];
-		int mAmbientSpoundId;
-		volatile unsigned int mPrepped;
+		int mAmbientSoundId;
 		float mParallax;
 		float mOutlineOpacity;
-		float mLastImpulsedAnimTime;
-		BYTE mLifeStatus[1];
-		class MapThing* pMapThing;
-		class UnitManager* pManager;
+		uint8_t mLifeStatus;
+		int int_pad;
+		engine::hades::MapThing* pMapThing;
+		DWORD64* pManager;
 		int* pRef;
-		Polygon mMotionTestingPoly;
-		std::optional<TransitionHelper> mAdjustZ;
-		std::optional<TransitionHelper> mAdjustParallax;
-		std::vector<DWORD64> mGroupNames;
-		std::vector<class ThingComponent*> mComponents;
-		std::unordered_set<Animation*, std::hash<Animation*>, std::equal_to<Animation*>> mAttachedAnims; // eastl::hash_set
+		engine::hades::Polygon mMotionTestingPoly;
+		char pad_02[0xB0];
+		std::vector<engine::hades::MapThingGroupId> mGroupNames;
+		std::vector<engine::hades::IThingComponent*> mComponents;
+		char pad_03[0x30];
 		engine::misc::HashGuid mName;
 
 	public:
@@ -265,7 +265,7 @@ namespace engine::hades
 		bool IsAlive_Internal()
 		{
 
-			return this->mLifeStatus[0] == 0;
+			return this->mLifeStatus == 0;
 		}
 
 		// Must be called in correct function
@@ -276,12 +276,13 @@ namespace engine::hades
 
 		bool IsInvulnerable()
 		{
-			if (!this->pAnim || !this->pAnim->mDef.mOwnerInvulnerable)
+			/*if (!this->pAnim || !this->pAnim->mDef.mOwnerInvulnerable)
 			{
 				if (!this->pLife || !this->pLife->mIsInvulnerable)
 					return false;
 			}
-			return true;
+			return true;*/
+			return false;
 		}
 
 		bool IsTargetable()
@@ -306,6 +307,13 @@ namespace engine::hades
 		float GetAngle(Thing* other)
 		{
 			float angle = atan2f((float)(other->location.y - this->location.y) * -1.f, other->location.x - this->location.x);
+			float result = floorf(angle / (6.2831855f)); // 2PI
+			return angle - (float)(result * (6.2831855f));
+		}
+
+		float GetAngle(D3DXVECTOR2 location)
+		{
+			float angle = atan2f((float)(location.y - this->location.y) * -1.f, location.x - this->location.x);
 			float result = floorf(angle / (6.2831855f)); // 2PI
 			return angle - (float)(result * (6.2831855f));
 		}

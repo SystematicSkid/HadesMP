@@ -91,10 +91,12 @@ namespace engine::hades
 		// Methods
 		void CopyArsenal(Unit* to_copy)
 		{
+			to_copy->arsenal.DumpWeapons();
 			auto weapons_to_copy = to_copy->arsenal.mWeapons;
 			std::vector<Weapon*> new_array; // Holder for all copied weapons
 			for (auto weapon : weapons_to_copy)
 			{
+				printf("Creating new weapon: %s\n", weapon->pData->name.ToString());
 				Weapon* new_weapon = Weapon::Create(weapon->pData->name, this); // Generate new weapon pointer from data and unit type
 				if (new_weapon)
 					new_array.push_back(new_weapon);
@@ -107,6 +109,13 @@ namespace engine::hades
 			for (auto weapon : new_array)
 				this->arsenal.AddWeapon(weapon);
 
+		}
+
+		bool IsReadyToFire()
+		{
+			if (!this || !this->mAllowAnyFire)
+				return false;
+			return true;
 		}
 
 		WeaponArsenal* GetArsenal()

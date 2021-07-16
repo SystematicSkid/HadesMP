@@ -75,6 +75,7 @@ namespace engine
 			{
 				DWORD64 CONST instance = Memory::GetCallAddress("E8 ? ? ? ? 0F B6 4D 04");
 				DWORD64 CONST add_player = Memory::GetCallAddress("E8 ? ? ? ? 48 8B F8 0F B6 1D");
+				DWORD64 CONST assign_controller = Memory::GetCallAddress("E8 ? ? ? ? 44 8B 05 ? ? ? ? 8B 15");
 			}
 		}
 
@@ -83,6 +84,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST create_player_unit = Memory::SigScan("48 8B C4 53 57 48 83 EC 58");
+				DWORD64 CONST create_enemy_unit = Memory::GetCallAddress("E8 ? ? ? ? FF C6 3B B7");
 			}
 
 			DWORD64 CONST map_instance = Memory::GetInstanceAddress("48 8B 15 ? ? ? ? 48 8B 0C C2 48 85 C9 74 0E 44 3B 01 74 0D 48 8B 49 10 48 85 C9 75 F2 4A 8B 0C CA 4A 39 0C CA"); // Points to bucket
@@ -115,6 +117,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST move_to = Memory::SigScan("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC 40 48 8B FA");
+				DWORD64 CONST handle_input = Memory::GetCallAddress("E8 ? ? ? ? E9 ? ? ? ? 4C 8B 47 18");
 			}
 		}
 
@@ -139,6 +142,9 @@ namespace engine
 				DWORD64 CONST create_data = Memory::GetCallAddress("E8 ? ? ? ? 48 8B D8 48 85 C0 74 36 45 33 C0");
 				DWORD64 CONST set_effect_property = Memory::SigScan("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 83 EC 30 48 8B 81");
 				DWORD64 CONST set_data_property = Memory::GetCallAddress("E8 ? ? ? ? EB 50 C7 45");
+				DWORD64 CONST set_projectile_property = Memory::GetCallAddress("E8 ? ? ? ? EB 04 4C 8B 7D 8F");
+				DWORD64 CONST must_release_trigger = Memory::SigScan("48 83 EC 28 80 79 11 00");
+				DWORD64 CONST has_ammo = Memory::GetCallAddress("E8 ? ? ? ? 84 C0 75 16 8B 55 3C");
 			}
 		}
 
@@ -156,7 +162,7 @@ namespace engine
 			namespace functions
 			{
 				DWORD64 CONST load_next_map = Memory::GetCallAddress("E8 ? ? ? ? 90 0F B6 45 DF C0 E8 07 24 01 74 10 48 8B 4D C8 48 85 C9 74 07 FF 15 ? ? ? ? 90 0F B6 45 27");
-				DWORD64 CONST add_outline = Memory::GetCallAddress("E8 ? ? ? ? 83 BF ? ? ? ? ? 74 45");
+				DWORD64 CONST add_outline = Memory::GetCallAddress("E8 ? ? ? ? 83 BF ? ? ? ? ? 74 3F");
 			}
 			DWORD64 CONST instance = Memory::GetInstanceAddress("48 89 05 ? ? ? ? 83 78 0C 00 7E 40");
 		}

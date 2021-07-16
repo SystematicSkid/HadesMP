@@ -153,7 +153,7 @@
     <ClInclude Include="Core\Hooks\directx.h" />
     <ClInclude Include="Core\Hooks\hooks.h" />
     <ClInclude Include="Core\Network\client.h" />
-    <ClInclude Include="Core\Network\defines.h" />
+    <ClInclude Include="Core\Network\packets.h" />
     <ClInclude Include="Core\Network\network.h" />
     <ClInclude Include="Core\Network\server.h" />
     <ClInclude Include="Core\Renderer\renderer.h" />
@@ -164,6 +164,7 @@
     <ClInclude Include="Engine\Classes\Hades\camera.h" />
     <ClInclude Include="Engine\Classes\Hades\gamedata.h" />
     <ClInclude Include="Engine\Classes\Hades\groupmanager.h" />
+    <ClInclude Include="Engine\Classes\Hades\inputhandler.h" />
     <ClInclude Include="Engine\Classes\Hades\player.h" />
     <ClInclude Include="Engine\Classes\Hades\playermanager.h" />
     <ClInclude Include="Engine\Classes\Hades\polygon.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Engine\Classes\Hades\World\map.h" />
     <ClInclude Include="Engine\Classes\Hades\World\world.h" />
     <ClInclude Include="Engine\Classes\lua.h" />
+    <ClInclude Include="Engine\Classes\Misc\any.h" />
     <ClInclude Include="Engine\Classes\Misc\bounds.h" />
     <ClInclude Include="Engine\Classes\Misc\color.h" />
     <ClInclude Include="Engine\Classes\Misc\handle.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="Engine\Enums\moveai.h" />
     <ClInclude Include="Engine\Enums\reflection.h" />
     <ClInclude Include="Engine\Enums\rtti.h" />
+    <ClInclude Include="Engine\Enums\weapon.h" />
     <ClInclude Include="Utilities\memory.h" />
     <ClInclude Include="Utilities\proxy.h" />
   </ItemGroup>
